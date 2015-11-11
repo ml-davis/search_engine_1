@@ -57,8 +57,6 @@ public class Dictionary implements Serializable {
         return "Please limit your search to 2 words :/";
     }
 
-
-
     public String printWord(String word) {
         if (dictionary.containsKey(word)) {
             return word + dictionary.get(word);

@@ -37,9 +37,9 @@ public class Gui extends Application implements Serializable {
 
         Text sceneTitle;
         if (Shared.STEMMED) {
-            sceneTitle = new Text("Reuters Search Engine (Stemmed)");
+            sceneTitle = new Text("Reuters Compressed Search Engine");
         } else {
-            sceneTitle = new Text("Reuters Search Engine (Not Stemmed)");
+            sceneTitle = new Text("Reuters Search Engine");
         }
         sceneTitle.setFont(Font.font("Arial", FontWeight.NORMAL, 20));
         grid.add(sceneTitle, 0, 0, 3, 1);
@@ -62,6 +62,7 @@ public class Gui extends Application implements Serializable {
         Label searchLabel = new Label("Search:");
         grid.add(searchLabel, 0, 1);
         TextField searchField = new TextField();
+        searchField.setPrefWidth(420);
         grid.add(searchField, 1, 1);
         Button searchButton = new Button("Search");
         searchButton.setOnAction(e -> {
@@ -95,9 +96,10 @@ public class Gui extends Application implements Serializable {
         });
         grid.add(browseButton, 2, 2);
 
-        Label viewDocumentLabel = new Label("View Document:");
+        Label viewDocumentLabel = new Label("  View Document:");
         grid.add(viewDocumentLabel, 3, 2);
         TextField viewDocumentField = new TextField();
+        viewDocumentField.setPrefWidth(350);
         grid.add(viewDocumentField, 4, 2);
         Button viewDocumentButton = new Button("View");
         viewDocumentButton.setOnAction(e -> {
@@ -122,9 +124,8 @@ public class Gui extends Application implements Serializable {
             viewDocumentField.setText("");
         });
         grid.add(clearButton, 0, 4);
-
-        Label wordCount = new Label("Number of terms in Dictionary: " + dictionary.getTotalWordCount());
-        grid.add(wordCount, 5, 4);
+        Label wordCount = new Label("                                       Number of terms in Dictionary: " + dictionary.getTotalWordCount());
+        grid.add(wordCount, 4, 4, 2, 1);
 
         primaryStage.show();
     }
