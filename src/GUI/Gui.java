@@ -106,7 +106,7 @@ public class Gui extends Application implements Serializable {
             try {
                 int input = Integer.parseInt(viewDocumentField.getText());
                 DocumentFetcher fetcher = new DocumentFetcher();
-                documentOutput.setText(fetcher.readTitle(input)+ "\n");
+                documentOutput.setText(fetcher.readTitle(input) + "\n");
                 documentOutput.appendText(fetcher.readBody(input));
             } catch (Exception e1) {
                 documentOutput.setText("Please enter the document number as an integer value");
@@ -124,7 +124,12 @@ public class Gui extends Application implements Serializable {
             viewDocumentField.setText("");
         });
         grid.add(clearButton, 0, 4);
-        Label wordCount = new Label("                                       Number of terms in Dictionary: " + dictionary.getTotalWordCount());
+        String wordCountString = "";
+        for (int i = 0; i < 39; i++) {
+            wordCountString += " ";
+        }
+        wordCountString += "Number of terms in Dictionary: " + dictionary.getTotalWordCount();
+        Label wordCount = new Label(wordCountString);
         grid.add(wordCount, 4, 4, 2, 1);
 
         primaryStage.show();
