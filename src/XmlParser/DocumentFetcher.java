@@ -89,8 +89,7 @@ public class DocumentFetcher implements Serializable {
 
     private Scanner xmlReader(int documentNumber) {
         Scanner inputStream = null;
-        String reuters = "/home/matthew/SearchEngine/Reuters/xml_files";
-        String path = reuters + "/doc_" + documentNumber + ".xml";
+        String path = Shared.XML_FILE_PATH + "doc_" + documentNumber + ".xml";
         try {
             File file = new File(path);
             inputStream = new Scanner(new FileInputStream(file));

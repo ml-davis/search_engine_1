@@ -4,9 +4,10 @@ import XmlParser.DocumentFetcher;
 
 import java.io.*;
 
-public class TestDriver {
+public class DictionaryTester {
     public static void main(String[] args) {
-
+        Dictionary dictionary = getDictionary();
+        // can test dictionary methods here
     }
 
     public static Dictionary getDictionary() {

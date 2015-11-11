@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parser implements Serializable {
-    private static final String dictionaryPath = "/home/matthew/SearchEngine/Dictionaries";
     private static final int blockSize = 5500;
     private static final int amountOfFiles = 21578;
-    private static boolean stemmed = true;
 
     public static void main(String[] args) {
         Parser parser = new Parser();
@@ -34,7 +32,7 @@ public class Parser implements Serializable {
                 System.out.printf("%-20s%8s%n", "Indexing document: ", documentCount + "/" + amountOfFiles
                     + " to block " + blockCount);
                 ArrayList<String> documentTokens = fetcher.getTokens(documentCount);
-                if (stemmed) {
+                if (Shared.STEMMED) {
                     documentTokens = porterStem(documentTokens);
                 }
                 for (String token: documentTokens) {
@@ -42,7 +40,7 @@ public class Parser implements Serializable {
                 }
             }
             System.out.println("\nWriting block " + blockCount + " to disk...\n");
-            if (stemmed) {
+            if (Shared.STEMMED) {
                 String path = "/stemmed/block_" + blockCount++;
                 saveDictionary(dictionary, path);
             } else {
@@ -71,7 +69,7 @@ public class Parser implements Serializable {
 
     public void saveDictionary(Dictionary dictionary, String fileName) {
         try {
-            String path = dictionaryPath + fileName;
+            String path = Shared.DICTIONARY_PATH + fileName;
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path));
             outputStream.writeObject(dictionary);
             outputStream.close();

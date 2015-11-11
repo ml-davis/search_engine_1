@@ -2,6 +2,7 @@ package GUI;
 import Dictionary.Dictionary;
 import XmlParser.DocumentFetcher;
 import XmlParser.PorterStemmer;
+import XmlParser.Shared;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,11 +20,10 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class Gui extends Application implements Serializable {
-    private final boolean stemmed = false;
 
     @Override
     public void start(Stage primaryStage) {
-        Dictionary dictionary = getDictionary(stemmed);
+        Dictionary dictionary = getDictionary();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -36,7 +36,7 @@ public class Gui extends Application implements Serializable {
         primaryStage.setScene(scene);
 
         Text sceneTitle;
-        if (stemmed) {
+        if (Shared.STEMMED) {
             sceneTitle = new Text("Reuters Search Engine (Stemmed)");
         } else {
             sceneTitle = new Text("Reuters Search Engine (Not Stemmed)");
@@ -69,7 +69,7 @@ public class Gui extends Application implements Serializable {
             if (searchItem.equals("")) {
                 searchResults.setText("Please enter search term");
             } else {
-                if (stemmed) {
+                if (Shared.STEMMED) {
                     searchItem = stemSearchTerm(searchItem);
                 }
                 String searchResult = dictionary.evaluateQuery(searchItem);
@@ -133,15 +133,15 @@ public class Gui extends Application implements Serializable {
         launch(args);
     }
 
-    public static Dictionary getDictionary(boolean stemmed) {
+    public static Dictionary getDictionary() {
         Dictionary d = null;
         long startTime = System.nanoTime();
         try {
             String path;
-            if (stemmed) {
-                path = "/home/matthew/SearchEngine/Dictionaries/stemmed/merged";
+            if (Shared.STEMMED) {
+                path = Shared.DICTIONARY_PATH + "stemmed/merged";
             } else {
-                path = "/home/matthew/SearchEngine/Dictionaries/ordinary/merged";
+                path = Shared.DICTIONARY_PATH + "ordinary/merged";
             }
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
             d = (Dictionary) inputStream.readObject();

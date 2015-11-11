@@ -9,10 +9,9 @@ import java.util.Stack;
 
 public class Merger {
     public static void main(String[] args) {
-        boolean stemmed = true;
 
-        String path = "/home/matthew/SearchEngine/Dictionaries/";
-        if (stemmed) {
+        String path = Shared.DICTIONARY_PATH;
+        if (Shared.STEMMED) {
             path += "stemmed/";
         } else {
             path += "ordinary/";
