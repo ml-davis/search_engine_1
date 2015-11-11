@@ -8,8 +8,9 @@ import java.util.Set;
 import java.util.Stack;
 
 public class Merger {
-    public static void main(String[] args) {
 
+
+    public void merge() {
         String path = Shared.DICTIONARY_PATH;
         if (Shared.STEMMED) {
             path += "stemmed/";
@@ -78,7 +79,7 @@ public class Merger {
         return dictionary;
     }
 
-    public static void saveDictionary(Dictionary dictionary, String path) {
+    public void saveDictionary(Dictionary dictionary, String path) {
         try {
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path + "/merged"));
             outputStream.writeObject(dictionary);

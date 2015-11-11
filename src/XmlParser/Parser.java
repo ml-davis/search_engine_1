@@ -49,6 +49,9 @@ public class Parser implements Serializable {
             }
         }
 
+        Merger merger = new Merger();
+        merger.merge();
+
         long timeToComplete = (System.nanoTime()-startTime)/1000000000;
         System.out.println("Creating and writing all blocks to disk took " + timeToComplete + " seconds.");
     }
