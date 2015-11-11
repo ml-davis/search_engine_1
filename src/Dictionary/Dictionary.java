@@ -1,5 +1,7 @@
 package Dictionary;
 
+import XmlParser.Shared;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +27,34 @@ public class Dictionary implements Serializable {
         }
     }
 
+    public String evaluateQuery2(String query) {
+        Dictionary solution = new Dictionary();
+        String[] words = query.split(" ");
+        TermInfo[] info = new TermInfo[words.length];
+        for (int i = 0; i < words.length; i++) {
+            info[i] = dictionary.get(words[i]);
+        }
+
+        return "";
+    }
+
+    public double bm25(String[] words) {
+        double score = 0;
+
+        for (String word: words) {
+            System.out.printf("%-6s:%6.3f%n", "N", (double)Shared.NUMBER_OF_DOCUMENTS);
+            System.out.printf("%-6s:%6.3f%n", "DFt", 0.0);
+            System.out.printf("%-6s:%6.3f%n", "k1", 0.0);
+            System.out.printf("%-6s:%6.3f%n", "TFtd", 0.0);
+            System.out.printf("%-6s:%6.3f%n", "b", 0.0);
+            System.out.printf("%-6s:%6.3f%n", "Ld", 0.0);
+            System.out.printf("%-6s:%6.3f%n", "Lave", 0.0);
+        }
+
+        return score;
+    }
+
+    // evaluate query using AND logic between the wo
     public String evaluateQuery(String query) {
         String[] words = query.split(" ");
         if (words.length == 1) {

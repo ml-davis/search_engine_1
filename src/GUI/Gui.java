@@ -14,16 +14,13 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 public class Gui extends Application implements Serializable {
 
     @Override
     public void start(Stage primaryStage) {
-        Dictionary dictionary = getDictionary();
+        Dictionary dictionary = Shared.getDictionary();
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -125,6 +122,7 @@ public class Gui extends Application implements Serializable {
         });
         grid.add(clearButton, 0, 4);
         String wordCountString = "";
+        // add spacing for right alignment
         for (int i = 0; i < 39; i++) {
             wordCountString += " ";
         }
@@ -137,27 +135,6 @@ public class Gui extends Application implements Serializable {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static Dictionary getDictionary() {
-        Dictionary d = null;
-        long startTime = System.nanoTime();
-        try {
-            String path;
-            if (Shared.STEMMED) {
-                path = Shared.DICTIONARY_PATH + "stemmed/merged";
-            } else {
-                path = Shared.DICTIONARY_PATH + "ordinary/merged";
-            }
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
-            d = (Dictionary) inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        long endTime = System.nanoTime();
-        long duration = (endTime-startTime)/1000000000;
-        System.out.println("Time to get dictionary: " + duration + " seconds");
-        return d;
     }
 
     public static String stemSearchTerm(String query){

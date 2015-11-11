@@ -1,30 +1,12 @@
 package Dictionary;
 
-import XmlParser.DocumentFetcher;
-
-import java.io.*;
+import XmlParser.Shared;
 
 public class DictionaryTester {
     public static void main(String[] args) {
-        Dictionary dictionary = getDictionary();
+        Dictionary dictionary = Shared.getDictionary();
         // can test dictionary methods here
+        String[] words = {"computer", "science"};
+        dictionary.bm25(words);
     }
-
-    public static Dictionary getDictionary() {
-        Dictionary d = null;
-        long startTime = System.nanoTime();
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(
-                    new FileInputStream("/home/matthew/SearchEngine/Dictionaries/ordinary_dictionary")
-            );
-            d = (Dictionary) inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        long endTime = System.nanoTime();
-        long duration = (endTime-startTime)/1000000000;
-        System.out.println("Time to get dictionary: " + duration + " seconds");
-        return d;
-    }
-
 }
