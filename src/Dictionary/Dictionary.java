@@ -4,10 +4,7 @@ import XmlParser.DocumentFetcher;
 import XmlParser.Shared;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public class Dictionary implements Serializable {
     private int totalWordCount;
@@ -39,31 +36,64 @@ public class Dictionary implements Serializable {
         return "";
     }
 
-    public double bm25(String[] words) {
-        double score = 0;
+    public void bm25(String[] words) {
+
+        TreeSet<DocumentScore> scores = new TreeSet<>();
 
         for (String word: words) {
+
             TermInfo termInfo = dictionary.get(word);
             DocumentFetcher fetcher = new DocumentFetcher();
             ArrayList<Document> document = termInfo.getDocumentsFound();
 
             System.out.printf("%-6s:%10s%n", "Word", word);
-            System.out.printf("%-6s:%10.3f%n", "N", Shared.NUMBER_OF_DOCUMENTS);
-            System.out.printf("%-6s:%10.3f%n", "DFt", (double) termInfo.getDocumentFrequency());
-            System.out.printf("%-6s:%10.3f%n", "k1", 1.2);
-            System.out.printf("%-6s:%10.3f%n", "b", 0.75);
-            System.out.printf("%-6s:%10.3f%n", "Lave", Shared.AVERAGE_DOCUMENT_LENGTH);
-            System.out.printf("%-6s:%10.3f%n", "TFtq", (double) termInfo.getTermFrequency());
+            double N = Shared.NUMBER_OF_DOCUMENTS;
+            System.out.printf("%-6s:%10.3f%n", "N", N);
+            double DFt = (double) termInfo.getDocumentFrequency();
+            System.out.printf("%-6s:%10.3f%n", "DFt", DFt);
+            double k1 = 1.2;
+            System.out.printf("%-6s:%10.3f%n", "k1", k1);
+            double b = 0.75;
+            System.out.printf("%-6s:%10.3f%n", "b", b);
+            double Lave = Shared.AVERAGE_DOCUMENT_LENGTH;
+            System.out.printf("%-6s:%10.3f%n", "Lave", Lave);
+            double TFtq = (double) termInfo.getTermFrequency();
+            System.out.printf("%-6s:%10.3f%n", "TFtq", TFtq);
             for (Document doc : document) {
-                System.out.printf("%-6s:%10.3f%n", "Doc", (double) doc.getDocumentNumber());
-                System.out.printf("%-6s:%10.3f%n", "Ld", (double) fetcher.getDocumentSize(doc.getDocumentNumber()));
-                System.out.printf("%-6s:%10.3f%n", "TFtd", (double) doc.getDocumentFrequency());
+                int documentNumber = doc.getDocumentNumber();
+                System.out.printf("%-6s:%10d%n", "Doc", documentNumber);
+                double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
+                System.out.printf("%-6s:%10.3f%n", "Ld", Ld);
+                double TFtd = (double) doc.getDocumentFrequency();
+                System.out.printf("%-6s:%10.3f%n", "TFtd", TFtd);
+                double numerator = Math.log(N/DFt)*(k1+1)*TFtd;
+                double denominator = k1*((1-b)+b*(Ld/Lave))+ TFtd;
+                double currentScore = numerator/denominator;
+                System.out.println("This term has a score of: " + currentScore + "\n");
+                System.out.println();
+
+
+                // check if document already in set, if so increment currentScore by old value
+                Iterator<DocumentScore> iterator = scores.iterator();
+
+                while (iterator.hasNext()) {
+                    DocumentScore score = iterator.next();
+                    if (score.getDocumentId() == documentNumber) {
+                        currentScore += score.getScore();
+                        iterator.remove();
+                    }
+                }
+                scores.add(new DocumentScore(documentNumber, currentScore));
             }
+            for (DocumentScore s : scores) {
+                System.out.println(s);
+            }
+
             System.out.println();
         }
-
-        return score;
     }
+
+
 
     // evaluate query using AND logic between the wo
     public String evaluateQuery(String query) {
@@ -165,4 +195,5 @@ public class Dictionary implements Serializable {
     public TermInfo getTermInfo(String token) {
         return dictionary.get(token);
     }
+
 }
