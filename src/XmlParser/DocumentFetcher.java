@@ -37,6 +37,13 @@ public class DocumentFetcher implements Serializable {
         return document;
     }
 
+    public int getDocumentSize(int documentNumber) {
+        String document = readTitle(documentNumber) + " " + readBody(documentNumber);
+        document = filterString(document);
+        String[] tokenArray = document.split(" ");
+        return tokenArray.length;
+    }
+
     public String readTitle(int documentNumber) {
         Pattern pattern = Pattern.compile("<TITLE>(.+?)</TITLE>");
         Matcher matcher = pattern.matcher(readDocument(documentNumber));

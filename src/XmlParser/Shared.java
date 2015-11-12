@@ -9,9 +9,11 @@ import java.io.ObjectInputStream;
 public class Shared {
     public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
     public static final String XML_FILE_PATH = "/home/matthew/SearchEngine/Reuters/xml_files/";
-    public static final Boolean STEMMED = true;
+    public static final Boolean STEMMED = false;
 
+    public static final int NUMBER_OF_WORDS = 2757710; // this is total amount of words (not unique amount of words)
     public static final int NUMBER_OF_DOCUMENTS = 21578;
+    public static final int AVERAGE_DOCUMENT_LENGTH = NUMBER_OF_WORDS/NUMBER_OF_DOCUMENTS;
 
     public static Dictionary getDictionary() {
         Dictionary d = null;

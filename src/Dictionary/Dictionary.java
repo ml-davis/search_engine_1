@@ -1,5 +1,6 @@
 package Dictionary;
 
+import XmlParser.DocumentFetcher;
 import XmlParser.Shared;
 
 import java.io.Serializable;
@@ -42,13 +43,23 @@ public class Dictionary implements Serializable {
         double score = 0;
 
         for (String word: words) {
-            System.out.printf("%-6s:%6.3f%n", "N", (double)Shared.NUMBER_OF_DOCUMENTS);
-            System.out.printf("%-6s:%6.3f%n", "DFt", 0.0);
-            System.out.printf("%-6s:%6.3f%n", "k1", 0.0);
-            System.out.printf("%-6s:%6.3f%n", "TFtd", 0.0);
-            System.out.printf("%-6s:%6.3f%n", "b", 0.0);
-            System.out.printf("%-6s:%6.3f%n", "Ld", 0.0);
-            System.out.printf("%-6s:%6.3f%n", "Lave", 0.0);
+            TermInfo termInfo = dictionary.get(word);
+            DocumentFetcher fetcher = new DocumentFetcher();
+            ArrayList<Document> document = termInfo.getDocumentsFound();
+
+            System.out.printf("%-6s:%10s%n", "Word", word);
+            System.out.printf("%-6s:%10.3f%n", "N", (double) Shared.NUMBER_OF_DOCUMENTS);
+            System.out.printf("%-6s:%10.3f%n", "DFt", (double) termInfo.getDocumentFrequency());
+            System.out.printf("%-6s:%10.3f%n", "k1", 1.2);
+            System.out.printf("%-6s:%10.3f%n", "TFtd", (double) termInfo.getTermFrequency());
+            System.out.printf("%-6s:%10.3f%n", "b", 0.75);
+            for (Document doc : document) {
+                System.out.printf("%-6s:%10d%n", "Doc", doc.getDocumentNumber());
+                System.out.printf("%-6s:%10d%n", "Ld", fetcher.getDocumentSize(doc.getDocumentNumber()));
+                System.out.printf("%-6s:%10d%n", "Lave", Shared.AVERAGE_DOCUMENT_LENGTH);
+                System.out.println();
+            }
+
         }
 
         return score;
@@ -58,7 +69,7 @@ public class Dictionary implements Serializable {
     public String evaluateQuery(String query) {
         String[] words = query.split(" ");
         if (words.length == 1) {
-            return query + dictionary.get(query);
+            return printWord(query);
         } else if (words.length == 2) {
             ArrayList<Document> term_0_docs = dictionary.get(words[0]).getDocumentsFound();
             ArrayList<Document> term_1_docs = dictionary.get(words[1]).getDocumentsFound();

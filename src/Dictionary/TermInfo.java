@@ -39,7 +39,9 @@ public class TermInfo implements Serializable {
         }
     }
 
-//    public int getDocumentFrequency
+    public int getDocumentFrequency() {
+        return documentsFound.size();
+    }
 
     public int getTermFrequency() {
         return this.termFrequency;
