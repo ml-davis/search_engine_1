@@ -7,7 +7,7 @@ public class DictionaryTester {
 //      Can test dictionary methods here
         Dictionary dictionary = Shared.getDictionary();
 
-        String[] words = {"whittaker", "restructurining"};
+        String[] words = {"george", "bush"};
         dictionary.bm25(words);
 
     }

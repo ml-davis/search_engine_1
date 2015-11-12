@@ -9,10 +9,6 @@ public class DocumentScore implements Comparable<DocumentScore> {
         this.score = score;
     }
 
-    public void incrementScore(double score) {
-        this.score += score;
-    }
-
     public String toString() {
         return "Document " + documentId + " Score: " + score;
     }

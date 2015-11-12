@@ -46,31 +46,31 @@ public class Dictionary implements Serializable {
             DocumentFetcher fetcher = new DocumentFetcher();
             ArrayList<Document> document = termInfo.getDocumentsFound();
 
-            System.out.printf("%-6s:%10s%n", "Word", word);
+//            System.out.printf("%-6s:%10s%n", "Word", word);
             double N = Shared.NUMBER_OF_DOCUMENTS;
-            System.out.printf("%-6s:%10.3f%n", "N", N);
+//            System.out.printf("%-6s:%10.3f%n", "N", N);
             double DFt = (double) termInfo.getDocumentFrequency();
-            System.out.printf("%-6s:%10.3f%n", "DFt", DFt);
+//            System.out.printf("%-6s:%10.3f%n", "DFt", DFt);
             double k1 = 1.2;
-            System.out.printf("%-6s:%10.3f%n", "k1", k1);
+//            System.out.printf("%-6s:%10.3f%n", "k1", k1);
             double b = 0.75;
-            System.out.printf("%-6s:%10.3f%n", "b", b);
+//            System.out.printf("%-6s:%10.3f%n", "b", b);
             double Lave = Shared.AVERAGE_DOCUMENT_LENGTH;
-            System.out.printf("%-6s:%10.3f%n", "Lave", Lave);
+//            System.out.printf("%-6s:%10.3f%n", "Lave", Lave);
             double TFtq = (double) termInfo.getTermFrequency();
-            System.out.printf("%-6s:%10.3f%n", "TFtq", TFtq);
+//            System.out.printf("%-6s:%10.3f%n", "TFtq", TFtq);
             for (Document doc : document) {
                 int documentNumber = doc.getDocumentNumber();
-                System.out.printf("%-6s:%10d%n", "Doc", documentNumber);
+//                System.out.printf("%-6s:%10d%n", "Doc", documentNumber);
                 double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
-                System.out.printf("%-6s:%10.3f%n", "Ld", Ld);
+//                System.out.printf("%-6s:%10.3f%n", "Ld", Ld);
                 double TFtd = (double) doc.getDocumentFrequency();
-                System.out.printf("%-6s:%10.3f%n", "TFtd", TFtd);
+//                System.out.printf("%-6s:%10.3f%n", "TFtd", TFtd);
                 double numerator = Math.log(N/DFt)*(k1+1)*TFtd;
                 double denominator = k1*((1-b)+b*(Ld/Lave))+ TFtd;
                 double currentScore = numerator/denominator;
-                System.out.println("This term has a score of: " + currentScore + "\n");
-                System.out.println();
+//                System.out.println("This term has a score of: " + currentScore + "\n");
+//                System.out.println();
 
 
                 // check if document already in set, if so increment currentScore by old value
@@ -85,11 +85,11 @@ public class Dictionary implements Serializable {
                 }
                 scores.add(new DocumentScore(documentNumber, currentScore));
             }
-            for (DocumentScore s : scores) {
-                System.out.println(s);
-            }
+        }
 
-            System.out.println();
+        Iterator<DocumentScore> iterator = scores.iterator();
+        for (int i = 1; i <= 30; i++) {
+            System.out.println(i + " " + iterator.next());
         }
     }
 
