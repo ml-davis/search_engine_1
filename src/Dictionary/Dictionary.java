@@ -48,18 +48,18 @@ public class Dictionary implements Serializable {
             ArrayList<Document> document = termInfo.getDocumentsFound();
 
             System.out.printf("%-6s:%10s%n", "Word", word);
-            System.out.printf("%-6s:%10.3f%n", "N", (double) Shared.NUMBER_OF_DOCUMENTS);
+            System.out.printf("%-6s:%10.3f%n", "N", Shared.NUMBER_OF_DOCUMENTS);
             System.out.printf("%-6s:%10.3f%n", "DFt", (double) termInfo.getDocumentFrequency());
             System.out.printf("%-6s:%10.3f%n", "k1", 1.2);
-            System.out.printf("%-6s:%10.3f%n", "TFtd", (double) termInfo.getTermFrequency());
             System.out.printf("%-6s:%10.3f%n", "b", 0.75);
+            System.out.printf("%-6s:%10.3f%n", "Lave", Shared.AVERAGE_DOCUMENT_LENGTH);
+            System.out.printf("%-6s:%10.3f%n", "TFtq", (double) termInfo.getTermFrequency());
             for (Document doc : document) {
-                System.out.printf("%-6s:%10d%n", "Doc", doc.getDocumentNumber());
-                System.out.printf("%-6s:%10d%n", "Ld", fetcher.getDocumentSize(doc.getDocumentNumber()));
-                System.out.printf("%-6s:%10d%n", "Lave", Shared.AVERAGE_DOCUMENT_LENGTH);
-                System.out.println();
+                System.out.printf("%-6s:%10.3f%n", "Doc", (double) doc.getDocumentNumber());
+                System.out.printf("%-6s:%10.3f%n", "Ld", (double) fetcher.getDocumentSize(doc.getDocumentNumber()));
+                System.out.printf("%-6s:%10.3f%n", "TFtd", (double) doc.getDocumentFrequency());
             }
-
+            System.out.println();
         }
 
         return score;
