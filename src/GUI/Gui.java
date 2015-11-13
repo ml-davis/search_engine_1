@@ -64,7 +64,7 @@ public class Gui extends Application implements Serializable {
         grid.add(intersectionSearchField, 1, 1);
         Button intersectionSearchButton = new Button("Search");
         intersectionSearchButton.setOnAction(e -> {
-            String searchItem = intersectionSearchField.getText();
+            String searchItem = Shared.filterString(intersectionSearchField.getText());
             if (searchItem.equals("")) {
                 searchResults.setText("Please enter search term");
             } else {
@@ -103,11 +103,9 @@ public class Gui extends Application implements Serializable {
         Button weightedSearchButton = new Button("Search");
         weightedSearchButton.setOnAction(e -> {
             String term = weightedSearchField.getText();
-//            String output;
-
-            // must call weighted search method here
-
-            //searchResults.setText(output);
+            String output = "Weighted search results for: " + term + "\n\n";
+            output += dictionary.weightedQuery(Shared.filterString(term));
+            searchResults.setText(output);
         });
         grid.add(weightedSearchButton, 2, 3);
 

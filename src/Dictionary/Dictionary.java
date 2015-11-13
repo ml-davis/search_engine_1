@@ -25,78 +25,9 @@ public class Dictionary implements Serializable {
         }
     }
 
-    public String evaluateQuery2(String query) {
-        Dictionary solution = new Dictionary();
-        String[] words = query.split(" ");
-        TermInfo[] info = new TermInfo[words.length];
-        for (int i = 0; i < words.length; i++) {
-            info[i] = dictionary.get(words[i]);
-        }
-
-        return "";
-    }
-
-    public void bm25(String[] words) {
-
-        TreeSet<DocumentScore> scores = new TreeSet<>();
-
-        for (String word: words) {
-
-            TermInfo termInfo = dictionary.get(word);
-            DocumentFetcher fetcher = new DocumentFetcher();
-            ArrayList<Document> document = termInfo.getDocumentsFound();
-
-//            System.out.printf("%-6s:%10s%n", "Word", word);
-            double N = Shared.NUMBER_OF_DOCUMENTS;
-//            System.out.printf("%-6s:%10.3f%n", "N", N);
-            double DFt = (double) termInfo.getDocumentFrequency();
-//            System.out.printf("%-6s:%10.3f%n", "DFt", DFt);
-            double k1 = 1.2;
-//            System.out.printf("%-6s:%10.3f%n", "k1", k1);
-            double b = 0.75;
-//            System.out.printf("%-6s:%10.3f%n", "b", b);
-            double Lave = Shared.AVERAGE_DOCUMENT_LENGTH;
-//            System.out.printf("%-6s:%10.3f%n", "Lave", Lave);
-            double TFtq = (double) termInfo.getTermFrequency();
-//            System.out.printf("%-6s:%10.3f%n", "TFtq", TFtq);
-            for (Document doc : document) {
-                int documentNumber = doc.getDocumentNumber();
-//                System.out.printf("%-6s:%10d%n", "Doc", documentNumber);
-                double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
-//                System.out.printf("%-6s:%10.3f%n", "Ld", Ld);
-                double TFtd = (double) doc.getDocumentFrequency();
-//                System.out.printf("%-6s:%10.3f%n", "TFtd", TFtd);
-                double numerator = Math.log(N/DFt)*(k1+1)*TFtd;
-                double denominator = k1*((1-b)+b*(Ld/Lave))+ TFtd;
-                double currentScore = numerator/denominator;
-//                System.out.println("This term has a score of: " + currentScore + "\n");
-//                System.out.println();
-
-
-                // check if document already in set, if so increment currentScore by old value
-                Iterator<DocumentScore> iterator = scores.iterator();
-
-                while (iterator.hasNext()) {
-                    DocumentScore score = iterator.next();
-                    if (score.getDocumentId() == documentNumber) {
-                        currentScore += score.getScore();
-                        iterator.remove();
-                    }
-                }
-                scores.add(new DocumentScore(documentNumber, currentScore));
-            }
-        }
-
-        Iterator<DocumentScore> iterator = scores.iterator();
-        for (int i = 1; i <= 30; i++) {
-            System.out.println(i + " " + iterator.next());
-        }
-    }
-
-
-
-    // evaluate query using AND logic between the wo
+    // evaluate query using AND logic between the words
     public String evaluateQuery(String query) {
+        query = Shared.filterString(query);
         String[] words = query.split(" ");
         if (words.length == 1) {
             return printWord(query);
@@ -126,6 +57,65 @@ public class Dictionary implements Serializable {
             }
         }
         return "Please limit your search to 2 words :/";
+    }
+
+    // get top 25 results of weighted score
+    public String weightedQuery(String query) {
+        String filteredString = Shared.filterString(query);
+        String[] words = filteredString.split(" ");
+        TreeSet<DocumentScore> scores = bm25(words);
+        Iterator<DocumentScore> iterator = scores.iterator();
+        int count = 0;
+        String result = "";
+        while (iterator.hasNext() && count < 25) {
+            result += iterator.next() + "\n";
+            count++;
+        }
+
+        return result;
+    }
+
+    private TreeSet<DocumentScore> bm25(String[] words) {
+
+        TreeSet<DocumentScore> scores = new TreeSet<>();
+
+        for (String word: words) {
+            if (dictionary.containsKey(word)) {
+                TermInfo termInfo = dictionary.get(word);
+                DocumentFetcher fetcher = new DocumentFetcher();
+                ArrayList<Document> document = termInfo.getDocumentsFound();
+
+                double N = Shared.NUMBER_OF_DOCUMENTS;
+                double DFt = (double) termInfo.getDocumentFrequency();
+                double k1 = 1.2;
+                double b = 0.75;
+                double Lave = Shared.AVERAGE_DOCUMENT_LENGTH;
+//                Can be added to longer query if you wish to do so
+//                double TFtq = (double) termInfo.getTermFrequency();
+                for (Document doc : document) {
+                    int documentNumber = doc.getDocumentNumber();
+                    double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
+                    double TFtd = (double) doc.getDocumentFrequency();
+                    double numerator = Math.log(N / DFt) * (k1 + 1) * TFtd;
+                    double denominator = k1 * ((1 - b) + b * (Ld / Lave)) + TFtd;
+                    double currentScore = numerator / denominator;
+
+                    Iterator<DocumentScore> iterator = scores.iterator();
+                    while (iterator.hasNext()) {
+                        DocumentScore score = iterator.next();
+                        // check if document already in set, if so increment currentScore by old value
+                        if (score.getDocumentId() == documentNumber) {
+                            currentScore += score.getScore();
+                            iterator.remove();
+                        }
+                    }
+                    // if document not already in set, add it
+                    scores.add(new DocumentScore(documentNumber, currentScore));
+                }
+            }
+        }
+
+        return scores;
     }
 
     public String printWord(String word) {

@@ -35,4 +35,13 @@ public class Shared {
         System.out.println("Time to get dictionary: " + duration + " seconds");
         return d;
     }
+
+    public static String filterString(String document) {
+        document = document.replaceAll("\\n", " ");
+        document = document.replaceAll("[^a-zA-Z']", " ");
+        document = document.replaceAll("\\b.\\b", " ");
+        document = document.replaceAll(" '.+ ", " ");
+        document = document.toLowerCase();
+        return document;
+    }
 }

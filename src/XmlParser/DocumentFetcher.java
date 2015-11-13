@@ -17,7 +17,7 @@ public class DocumentFetcher implements Serializable {
 
     public ArrayList<String> getTokens(int documentNumber) {
         String document = readTitle(documentNumber) + " " + readBody(documentNumber);
-        document = filterString(document);
+        document = Shared.filterString(document);
         String[] tokenArray = document.split(" ");
         ArrayList<String> tokens = new ArrayList<>();
         for (String token : tokenArray) {
@@ -28,18 +28,11 @@ public class DocumentFetcher implements Serializable {
         return tokens;
     }
 
-    public String filterString(String document) {
-        document = document.replaceAll("\\n", " ");
-        document = document.replaceAll("[^a-zA-Z']", " ");
-        document = document.replaceAll("\\b.\\b", " ");
-        document = document.replaceAll(" '.+ ", " ");
-        document = document.toLowerCase();
-        return document;
-    }
+
 
     public int getDocumentSize(int documentNumber) {
         String document = readTitle(documentNumber) + " " + readBody(documentNumber);
-        document = filterString(document);
+        document = Shared.filterString(document);
         String[] tokenArray = document.split(" ");
         return tokenArray.length;
     }
