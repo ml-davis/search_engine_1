@@ -63,6 +63,7 @@ public class Dictionary implements Serializable {
     public String weightedQuery(String query) {
         String filteredString = Shared.filterString(query);
         String[] words = filteredString.split(" ");
+        words = Shared.removeStopWords(words);
         TreeSet<DocumentScore> scores = bm25(words);
         Iterator<DocumentScore> iterator = scores.iterator();
         int count = 0;
@@ -87,8 +88,8 @@ public class Dictionary implements Serializable {
 
                 double N = Shared.NUMBER_OF_DOCUMENTS;
                 double DFt = (double) termInfo.getDocumentFrequency();
-                double k1 = 1.2;
-                double b = 0.75;
+                double k1 = 0.25;
+                double b = 0.5;
                 double Lave = Shared.AVERAGE_DOCUMENT_LENGTH;
 //                Can be added to longer query if you wish to do so
 //                double TFtq = (double) termInfo.getTermFrequency();

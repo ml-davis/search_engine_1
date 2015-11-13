@@ -5,6 +5,7 @@ import Dictionary.Dictionary;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 public class Shared {
     public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
@@ -43,5 +44,29 @@ public class Shared {
         document = document.replaceAll(" '.+ ", " ");
         document = document.toLowerCase();
         return document;
+    }
+
+    public static String[] removeStopWords(String[] words) {
+        String[] stopWords = {"I", "a", "about", "an", "are", "as", "at", "be", "by", "for", "from", "how", "in", "is",
+            "it", "of", "on", "or", "that", "the", "this", "to", "was", "what", "when", "where", "who", "will", "with",
+            "the"};
+        ArrayList<String> filteredWords = new ArrayList<>();
+        for (String word : words) {
+            boolean hasWord = false;
+            for (String stopWord : stopWords) {
+                if (word.equals(stopWord)) {
+                    hasWord = true;
+                }
+            }
+            if (!hasWord) {
+                filteredWords.add(word);
+            }
+        }
+        String[] results = new String[filteredWords.size()];
+        for (int i = 0; i < filteredWords.size(); i++) {
+            results[i] = filteredWords.get(i);
+        }
+
+        return results;
     }
 }
