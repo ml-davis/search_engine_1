@@ -47,23 +47,24 @@ public class Gui extends Application implements Serializable {
         searchResults.setEditable(false);
         ScrollPane searchScrollPane = new ScrollPane();
         searchScrollPane.setContent(searchResults);
-        grid.add(searchResults, 0, 3, 3, 1);
+        grid.add(searchResults, 0, 4, 3, 1);
 
         // document viewer
         TextArea documentOutput = new TextArea();
         documentOutput.setEditable(false);
         ScrollPane documentScrollPane = new ScrollPane();
         documentScrollPane.setContent(documentOutput);
-        grid.add(documentOutput, 3, 3, 3, 1);
+        grid.add(documentOutput, 3, 4, 3, 1);
 
-        Label searchLabel = new Label("Search:");
-        grid.add(searchLabel, 0, 1);
-        TextField searchField = new TextField();
-        searchField.setPrefWidth(420);
-        grid.add(searchField, 1, 1);
-        Button searchButton = new Button("Search");
-        searchButton.setOnAction(e -> {
-            String searchItem = searchField.getText();
+        // intersection search
+        Label intersectionSearchLabel = new Label("Intersection Search:");
+        grid.add(intersectionSearchLabel, 0, 1);
+        TextField intersectionSearchField = new TextField();
+        intersectionSearchField.setPrefWidth(350);
+        grid.add(intersectionSearchField, 1, 1);
+        Button intersectionSearchButton = new Button("Search");
+        intersectionSearchButton.setOnAction(e -> {
+            String searchItem = intersectionSearchField.getText();
             if (searchItem.equals("")) {
                 searchResults.setText("Please enter search term");
             } else {
@@ -74,15 +75,16 @@ public class Gui extends Application implements Serializable {
                 searchResults.setText(searchResult);
             }
         });
-        grid.add(searchButton, 2, 1);
+        grid.add(intersectionSearchButton, 2, 1);
 
-        Label browseLabel = new Label("Browse:");
-        grid.add(browseLabel, 0, 2);
-        TextField browseField = new TextField();
-        grid.add(browseField, 1, 2);
-        Button browseButton = new Button("Browse");
-        browseButton.setOnAction(e -> {
-            String term = browseField.getText();
+        // wildcard search
+        Label wildcardLabel = new Label("Words Starting With:");
+        grid.add(wildcardLabel, 0, 2);
+        TextField wildcardField = new TextField();
+        grid.add(wildcardField, 1, 2);
+        Button wildcardButton = new Button("Search");
+        wildcardButton.setOnAction(e -> {
+            String term = wildcardField.getText();
             String output;
             if (term.equals("")) {
                 output = "Please enter the beginning of the word that you are interested in";
@@ -91,13 +93,30 @@ public class Gui extends Application implements Serializable {
             }
             searchResults.setText(output);
         });
-        grid.add(browseButton, 2, 2);
+        grid.add(wildcardButton, 2, 2);
 
-        Label viewDocumentLabel = new Label("  View Document:");
-        grid.add(viewDocumentLabel, 3, 2);
+        // weighted search
+        Label weightedSearchLabel = new Label("Weighted Search:");
+        grid.add(weightedSearchLabel, 0, 3);
+        TextField weightedSearchField = new TextField();
+        grid.add(weightedSearchField, 1, 3);
+        Button weightedSearchButton = new Button("Search");
+        weightedSearchButton.setOnAction(e -> {
+            String term = weightedSearchField.getText();
+//            String output;
+
+            // must call weighted search method here
+
+            //searchResults.setText(output);
+        });
+        grid.add(weightedSearchButton, 2, 3);
+
+        // view document
+        Label viewDocumentLabel = new Label("View Document:");
+        grid.add(viewDocumentLabel, 3, 3);
         TextField viewDocumentField = new TextField();
         viewDocumentField.setPrefWidth(350);
-        grid.add(viewDocumentField, 4, 2);
+        grid.add(viewDocumentField, 4, 3);
         Button viewDocumentButton = new Button("View");
         viewDocumentButton.setOnAction(e -> {
             try {
@@ -109,18 +128,19 @@ public class Gui extends Application implements Serializable {
                 documentOutput.setText("Please enter the document number as an integer value");
             }
         });
-        grid.add(viewDocumentButton, 5, 2);
+        grid.add(viewDocumentButton, 5, 3);
 
 
         Button clearButton = new Button("Clear");
         clearButton.setOnAction(e -> {
             searchResults.setText("");
             documentOutput.setText("");
-            searchField.setText("");
-            browseField.setText("");
+            intersectionSearchField.setText("");
+            wildcardField.setText("");
+            weightedSearchField.setText("");
             viewDocumentField.setText("");
         });
-        grid.add(clearButton, 0, 4);
+        grid.add(clearButton, 0, 5);
         String wordCountString = "";
         // add spacing for right alignment
         for (int i = 0; i < 39; i++) {
@@ -128,7 +148,7 @@ public class Gui extends Application implements Serializable {
         }
         wordCountString += "Number of terms in Dictionary: " + dictionary.getTotalWordCount();
         Label wordCount = new Label(wordCountString);
-        grid.add(wordCount, 4, 4, 2, 1);
+        grid.add(wordCount, 4, 5, 2, 1);
 
         primaryStage.show();
     }

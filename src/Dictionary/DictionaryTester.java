@@ -7,7 +7,8 @@ public class DictionaryTester {
 //      Can test dictionary methods here
         Dictionary dictionary = Shared.getDictionary();
 
-        String[] words = {"george", "bush"};
+//        Democrats' welfare and healthcare reform policies
+        String[] words = {"democrats", "welfare", "and", "healthcare", "reform", "policies"};
         dictionary.bm25(words);
 
     }
