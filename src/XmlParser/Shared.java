@@ -37,6 +37,14 @@ public class Shared {
         return d;
     }
 
+    public static String[] getSearchTokens(String query) {
+        query = filterString(query);
+        String[] words = query.split(" ");
+        words = removeStopWords(words);
+
+        return words;
+    }
+
     public static String filterString(String document) {
         document = document.replaceAll("\\n", " ");
         document = document.replaceAll("[^a-zA-Z']", " ");
@@ -46,7 +54,7 @@ public class Shared {
         return document;
     }
 
-    public static String[] removeStopWords(String[] words) {
+    private static String[] removeStopWords(String[] words) {
         String[] stopWords = {"I", "a", "about", "an", "are", "as", "at", "be", "by", "for", "from", "how", "in", "is",
             "it", "of", "on", "or", "that", "the", "this", "to", "was", "what", "when", "where", "who", "will", "with",
             "the"};
@@ -69,4 +77,5 @@ public class Shared {
 
         return results;
     }
+
 }

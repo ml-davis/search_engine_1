@@ -71,7 +71,7 @@ public class Gui extends Application implements Serializable {
                 if (Shared.STEMMED) {
                     searchItem = stemSearchTerm(searchItem);
                 }
-                String searchResult = dictionary.evaluateQuery(searchItem);
+                String searchResult = dictionary.intersectionQueryNew(searchItem);
                 searchResults.setText(searchResult);
             }
         });
@@ -128,7 +128,7 @@ public class Gui extends Application implements Serializable {
         });
         grid.add(viewDocumentButton, 5, 3);
 
-
+        // empties all textFields and textAreas
         Button clearButton = new Button("Clear");
         clearButton.setOnAction(e -> {
             searchResults.setText("");
@@ -139,8 +139,11 @@ public class Gui extends Application implements Serializable {
             viewDocumentField.setText("");
         });
         grid.add(clearButton, 0, 5);
+
+
+        // show size of dictionary in bottom right-hand-side of window
         String wordCountString = "";
-        // add spacing for right alignment
+        // add spacing for right alignment (yes I know this is a lame way to do it)
         for (int i = 0; i < 39; i++) {
             wordCountString += " ";
         }
