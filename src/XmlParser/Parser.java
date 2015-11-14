@@ -14,10 +14,39 @@ public class Parser implements Serializable {
 
     public static void main(String[] args) {
         Parser parser = new Parser();
-        parser.createDictionary();
+        parser.quickParse();
     }
 
-    public void createDictionary() {
+    public void quickParse() {
+        long startTime = System.nanoTime();
+
+        Dictionary dictionary = new Dictionary();
+        DocumentFetcher fetcher = new DocumentFetcher();
+
+        for (int i = 1; i <= Shared.NUMBER_OF_DOCUMENTS; i++) {
+            System.out.printf("%-20s%8s%n", "Indexing document: ", i + "/" + amountOfFiles);
+            ArrayList<String> documentTokens = fetcher.getTokens(i);
+            if (Shared.STEMMED) {
+                documentTokens = porterStem(documentTokens);
+            }
+            for (String token: documentTokens) {
+                dictionary.submitWord(token, i);
+            }
+        }
+        System.out.println("\nWriting dictionary to disk...\n");
+        if (Shared.STEMMED) {
+            String path = "/stemmed/quick_parsed_dictionary";
+            saveDictionary(dictionary, path);
+        } else {
+            String path = "/ordinary/quick_parsed_dictionary";
+            saveDictionary(dictionary, path);
+        }
+
+        long timeToComplete = (System.nanoTime()-startTime)/1000000000;
+        System.out.println("Creating and writing all blocks to disk took " + timeToComplete + " seconds.");
+    }
+
+    public void mergeParse() {
         long startTime = System.nanoTime();
 
         Dictionary dictionary = new Dictionary();

@@ -27,9 +27,13 @@ public class Shared {
         long startTime = System.nanoTime();
         try {
             String path;
-            if (Shared.STEMMED) {
+            if (STEMMED && QUICK_PARSE) {
+                path = Shared.DICTIONARY_PATH + "stemmed/quick_parsed_dictionary";
+            } else if (STEMMED && !QUICK_PARSE) {
                 path = Shared.DICTIONARY_PATH + "stemmed/merged";
-            } else {
+            } else if (!STEMMED && QUICK_PARSE) {
+                path = Shared.DICTIONARY_PATH + "ordinary/quick_parsed_dictionary";
+            } else if (!STEMMED && !QUICK_PARSE) {
                 path = Shared.DICTIONARY_PATH + "ordinary/merged";
             }
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
