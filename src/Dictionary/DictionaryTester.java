@@ -9,7 +9,7 @@ public class DictionaryTester {
         Dictionary dictionary = Shared.getDictionary();
 //        System.out.println(dictionary.weightedQuery("George Bush"));
 
-        String q = "computer science apple";
+        dictionary.showDictionary(500, 600);
 
     }
 

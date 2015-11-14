@@ -260,6 +260,16 @@ public class Dictionary implements Serializable {
         return output;
     }
 
+    public void showDictionary(int start, int end) {
+        ArrayList<String> sortedDictionary = new ArrayList<>(dictionary.keySet());
+        System.out.println("Sorting dictionary...");
+        Collections.sort(sortedDictionary);
+        System.out.println("Printing term " + start + " to " + end);
+        for (int i = start; i < end; i++) {
+            System.out.println(sortedDictionary.get(i));
+        }
+    }
+
     public Set<String> getKeySet() {
         return dictionary.keySet();
     }

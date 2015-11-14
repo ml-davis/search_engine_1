@@ -45,13 +45,13 @@ public class Shared {
         return words;
     }
 
-    public static String filterString(String document) {
-        document = document.replaceAll("\\n", " ");
-        document = document.replaceAll("[^a-zA-Z']", " ");
-        document = document.replaceAll("\\b.\\b", " ");
-        document = document.replaceAll(" '.+ ", " ");
-        document = document.toLowerCase();
-        return document;
+    public static String filterString(String text) {
+        text = text.replaceAll("\\n", " ");
+        text = text.replaceAll("[^a-zA-Z']", " ");
+        text = text.replaceAll("\\b.\\b", " ");
+        text = text.replaceAll(" '.+ ", " ");
+        text = text.toLowerCase();
+        return text;
     }
 
     private static String[] removeStopWords(String[] words) {
