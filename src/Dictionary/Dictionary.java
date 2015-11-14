@@ -16,6 +16,7 @@ public class Dictionary implements Serializable {
         this.dictionary = new HashMap<>();
     }
 
+    // Submits a word to the ADT
     public void submitWord(String word, int documentNumber) {
         if (!dictionary.containsKey(word)) {
             totalWordCount++;
@@ -25,8 +26,28 @@ public class Dictionary implements Serializable {
         }
     }
 
-    public String intersectionQuery(String query) {
+    // Get a string that contains the argument words info in the dictionary
+    public String getWord(String word) {
+        if (dictionary.containsKey(word)) {
+            return word + dictionary.get(word);
+        } else {
+            return "Word not found";
+        }
+    }
 
+    // Gives the ability to easily browse the contents of dictionary. Returns the words in specified range.
+    public void showDictionary(int start, int end) {
+        ArrayList<String> sortedDictionary = new ArrayList<>(dictionary.keySet());
+        System.out.println("Sorting dictionary...");
+        Collections.sort(sortedDictionary);
+        System.out.println("Printing term " + start + " to " + end);
+        for (int i = start; i < end; i++) {
+            System.out.println(sortedDictionary.get(i));
+        }
+    }
+
+    // Get search results that contain all words in query (minus stop-words). This uses AND logic.
+    public String intersectionQuery(String query) {
         Dictionary temp = new Dictionary();
 
         int terminator = -1;
@@ -61,7 +82,7 @@ public class Dictionary implements Serializable {
                         return temp.getWord(query);
                 }
             } else {
-                int highest = getHighestDocId(docId);
+                int highest = getHighest(docId);
                 int highestIndex = getHighestIndex(docId, highest);
                 ArrayList<Integer> incrementIndexes = getIncrementIndexes(docId, highest);
 
@@ -80,40 +101,34 @@ public class Dictionary implements Serializable {
 
     }
 
-    // evaluate query using AND logic between the words
-    public String intersectionQueryOld(String query) {
-        String[] words = Shared.getSearchTokens(query);
-        if (words.length == 1) {
-            return getWord(query);
-        } else if (words.length == 2) {
-            ArrayList<Document> term_0_docs = dictionary.get(words[0]).getDocumentsFound();
-            ArrayList<Document> term_1_docs = dictionary.get(words[1]).getDocumentsFound();
-            int index_0 = 0;
-            int index_1 = 0;
-            Dictionary temp = new Dictionary();
-            while (index_0 < term_0_docs.size() && index_1 < term_1_docs.size()) {
-                int docID_0 = term_0_docs.get(index_0).getDocumentNumber();
-                int docID_1 = term_1_docs.get(index_1).getDocumentNumber();
-                if (docID_0 == docID_1) {
-                    temp.submitWord(query, docID_0);
-                    index_0++;
-                    index_1++;
-                } else if (docID_0 < docID_1) {
-                    index_0++;
-                } else {
-                    index_1++;
+    // Used by my wildcard query. Returns words in dictionary that begin with argument.
+    public String getWordsBeginningWith(String beginsWith) {
+        ArrayList<String> sortedDictionary = new ArrayList<>(dictionary.keySet());
+        Collections.sort(sortedDictionary);
+
+        String output = "";
+        int count = 0;
+
+        for (String term : sortedDictionary) {
+            if (term.length() >= beginsWith.length()) {
+                boolean foundMatch = true;
+                for (int i = 0; i < beginsWith.length(); i++) {
+                    if (!term.substring(i, i+1).equals(beginsWith.substring(i, i+1))) {
+                        foundMatch = false;
+                    }
+                }
+                if (foundMatch) {
+                    output += term + dictionary.get(term) + "\n";
+                    count++;
                 }
             }
-            if (temp.dictionary.containsKey(query)) {
-                return temp.getWord(query);
-            } else {
-                return "Word not found";
-            }
         }
-        return "Please limit your search to 2 words :/";
+        output += "Dictionary has " + count + " terms starting with " + beginsWith;
+
+        return output;
     }
 
-    // get top 25 results of weighted score
+    // Get top 25 results using the BM25 equation for a weighted score
     public String weightedQuery(String query) {
         String[] words = Shared.getSearchTokens(query);
         TreeSet<DocumentScore> scores = bm25(words);
@@ -128,8 +143,8 @@ public class Dictionary implements Serializable {
         return result;
     }
 
+    // Returns a set of documents sorted by their bm25 score
     private TreeSet<DocumentScore> bm25(String[] words) {
-
         TreeSet<DocumentScore> scores = new TreeSet<>();
 
         // constants
@@ -177,20 +192,14 @@ public class Dictionary implements Serializable {
         return scores;
     }
 
+    // Calculates bm25
     private double calculateBM25(double N, double Lave, double b, double k1, double DFt, double Ld, double TFtd) {
         double numerator = Math.log(N / DFt) * (k1 + 1) * TFtd;
         double denominator = k1 * ((1 - b) + b * (Ld / Lave)) + TFtd;
         return numerator/denominator;
     }
 
-    public String getWord(String word) {
-        if (dictionary.containsKey(word)) {
-            return word + dictionary.get(word);
-        } else {
-            return "Word not found";
-        }
-    }
-
+    // Determines if all the values of the array contain the same value
     private boolean allSame(int[] docId) {
         boolean match = true;
         int first = docId[0];
@@ -203,7 +212,8 @@ public class Dictionary implements Serializable {
         return match;
     }
 
-    private int getHighestDocId(int[] docId) {
+    // Returns highest value stored in an array
+    private int getHighest(int[] docId) {
         int highest = docId[0];
         for (int i = 1; i < docId.length; i++) {
             if (docId[i] > highest) {
@@ -213,6 +223,7 @@ public class Dictionary implements Serializable {
         return highest;
     }
 
+    // Used by the intersection algorithm to check which document list needs to be incremented
     private ArrayList<Integer> getIncrementIndexes(int[] docId, int highest) {
         ArrayList<Integer> values = new ArrayList<>();
         for (int i = 0; i < docId.length; i++) {
@@ -224,6 +235,7 @@ public class Dictionary implements Serializable {
         return values;
     }
 
+    // Used by the intersection algorithm to determine which document list doesn't need to be incremented
     private int getHighestIndex(int[] docId, int highest) {
         int index = -1;
         for (int i = 0; i < docId.length; i++) {
@@ -234,42 +246,7 @@ public class Dictionary implements Serializable {
         return index;
     }
 
-    public String getWordsBeginningWith(String beginsWith) {
-        ArrayList<String> sortedDictionary = new ArrayList<>(dictionary.keySet());
-        Collections.sort(sortedDictionary);
-
-        String output = "";
-        int count = 0;
-
-        for (String term : sortedDictionary) {
-            if (term.length() >= beginsWith.length()) {
-                boolean foundMatch = true;
-                for (int i = 0; i < beginsWith.length(); i++) {
-                    if (!term.substring(i, i+1).equals(beginsWith.substring(i, i+1))) {
-                        foundMatch = false;
-                    }
-                }
-                if (foundMatch) {
-                    output += term + dictionary.get(term) + "\n";
-                    count++;
-                }
-            }
-        }
-        output += "Dictionary has " + count + " terms starting with " + beginsWith;
-
-        return output;
-    }
-
-    public void showDictionary(int start, int end) {
-        ArrayList<String> sortedDictionary = new ArrayList<>(dictionary.keySet());
-        System.out.println("Sorting dictionary...");
-        Collections.sort(sortedDictionary);
-        System.out.println("Printing term " + start + " to " + end);
-        for (int i = start; i < end; i++) {
-            System.out.println(sortedDictionary.get(i));
-        }
-    }
-
+    // Getters
     public Set<String> getKeySet() {
         return dictionary.keySet();
     }

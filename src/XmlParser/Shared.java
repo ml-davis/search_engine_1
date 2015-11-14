@@ -13,12 +13,13 @@ public class Shared {
     public static final boolean STEMMED = false;
     public static final boolean QUICK_PARSE = true;
 
-
+    // paths
     public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
     public static final String XML_FILE_PATH = "/home/matthew/SearchEngine/Reuters/xml_files/";
 
-
-    public static final double NUMBER_OF_WORDS = 2757710; // this is total amount of words (not unique amount of words)
+    // constants
+    // this is total amount of words that appear in all documents (not total unique)
+    public static final double NUMBER_OF_WORDS = 2757710;
     public static final double NUMBER_OF_DOCUMENTS = 21578;
     public static final double AVERAGE_DOCUMENT_LENGTH = NUMBER_OF_WORDS/NUMBER_OF_DOCUMENTS;
 
@@ -39,6 +40,7 @@ public class Shared {
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
             d = (Dictionary) inputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
+            System.out.println("I am in the catch block.");
             e.printStackTrace();
         }
         long endTime = System.nanoTime();
