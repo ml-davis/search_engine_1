@@ -17,10 +17,9 @@ public class DocumentFetcher implements Serializable {
 
     public ArrayList<String> getTokens(int documentNumber) {
         String document = readTitle(documentNumber) + " " + readBody(documentNumber);
-        document = Shared.filterString(document);
-        String[] tokenArray = document.split(" ");
+        String[] words = Shared.getSearchTokens(document);
         ArrayList<String> tokens = new ArrayList<>();
-        for (String token : tokenArray) {
+        for (String token : words) {
             if (!token.equals("")) {
                 tokens.add(token);
             }
@@ -32,14 +31,13 @@ public class DocumentFetcher implements Serializable {
 
     public int getDocumentSize(int documentNumber) {
         String document = readTitle(documentNumber) + " " + readBody(documentNumber);
-        document = Shared.filterString(document);
-        String[] tokenArray = document.split(" ");
+        String[] tokenArray = Shared.getSearchTokens(document);
         return tokenArray.length;
     }
 
     public String readTitle(int documentNumber) {
         Pattern pattern = Pattern.compile("<TITLE>(.+?)</TITLE>");
-        Matcher matcher = pattern.matcher(readDocument(documentNumber));
+        Matcher matcher = pattern.matcher(getDocumentString(documentNumber));
 
         if (matcher.find()) {
             return matcher.group(1) + "";
@@ -52,7 +50,7 @@ public class DocumentFetcher implements Serializable {
     public String readBody(int documentNumber) {
         // (?s) treats whole body as one line
         Pattern pattern = Pattern.compile("(?s)<BODY>(.+?)</BODY>");
-        Matcher matcher = pattern.matcher(readDocument(documentNumber));
+        Matcher matcher = pattern.matcher(getDocumentString(documentNumber));
 
         if (matcher.find()) {
             String body = matcher.group(1);
@@ -65,7 +63,7 @@ public class DocumentFetcher implements Serializable {
         }
     }
 
-    public String readDocument(int documentNumber) {
+    public String getDocumentString(int documentNumber) {
         Scanner reader = xmlReader(documentNumber);
         String doc = "";
         while (reader.hasNextLine()) {
@@ -76,7 +74,7 @@ public class DocumentFetcher implements Serializable {
         return doc;
     }
 
-    public String readLine(int documentNumber, int lineNumber) {
+    public String getDocumentLine(int documentNumber, int lineNumber) {
         Scanner reader = xmlReader(documentNumber);
         for (int i = 0; i < lineNumber - 1; i++) {
             reader.nextLine();

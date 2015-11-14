@@ -25,7 +25,7 @@ public class Dictionary implements Serializable {
         }
     }
 
-    public String intersectionQueryNew(String query) {
+    public String intersectionQuery(String query) {
 
         Dictionary temp = new Dictionary();
 
@@ -81,7 +81,7 @@ public class Dictionary implements Serializable {
     }
 
     // evaluate query using AND logic between the words
-    public String intersectionQuery(String query) {
+    public String intersectionQueryOld(String query) {
         String[] words = Shared.getSearchTokens(query);
         if (words.length == 1) {
             return getWord(query);

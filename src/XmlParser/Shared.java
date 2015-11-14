@@ -8,9 +8,15 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 public class Shared {
+
+    // Project Options
+    public static final boolean STEMMED = false;
+    public static final boolean QUICK_PARSE = true;
+
+
     public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
     public static final String XML_FILE_PATH = "/home/matthew/SearchEngine/Reuters/xml_files/";
-    public static final Boolean STEMMED = false;
+
 
     public static final double NUMBER_OF_WORDS = 2757710; // this is total amount of words (not unique amount of words)
     public static final double NUMBER_OF_DOCUMENTS = 21578;
@@ -45,7 +51,7 @@ public class Shared {
         return words;
     }
 
-    public static String filterString(String text) {
+    private static String filterString(String text) {
         text = text.replaceAll("\\n", " ");
         text = text.replaceAll("[^a-zA-Z']", " ");
         text = text.replaceAll("\\b.\\b", " ");
