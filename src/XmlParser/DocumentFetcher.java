@@ -9,14 +9,16 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// This class is used to gain easy-access to documents and info about those documents
 public class DocumentFetcher implements Serializable {
 
     public DocumentFetcher() {
         // default constructor
     }
 
+    // Returns list of all the words in a specific document.
     public ArrayList<String> getTokens(int documentNumber) {
-        String document = readTitle(documentNumber) + " " + readBody(documentNumber);
+        String document = getTitle(documentNumber) + " " + getBody(documentNumber);
         String[] words = Shared.getSearchTokens(document);
         ArrayList<String> tokens = new ArrayList<>();
         for (String token : words) {
@@ -27,15 +29,15 @@ public class DocumentFetcher implements Serializable {
         return tokens;
     }
 
-
-
+    // Returns the size of a specific document
     public int getDocumentSize(int documentNumber) {
-        String document = readTitle(documentNumber) + " " + readBody(documentNumber);
+        String document = getTitle(documentNumber) + " " + getBody(documentNumber);
         String[] tokenArray = Shared.getSearchTokens(document);
         return tokenArray.length;
     }
 
-    public String readTitle(int documentNumber) {
+    // Returns the title of a specific document
+    public String getTitle(int documentNumber) {
         Pattern pattern = Pattern.compile("<TITLE>(.+?)</TITLE>");
         Matcher matcher = pattern.matcher(getDocumentString(documentNumber));
 
@@ -47,7 +49,8 @@ public class DocumentFetcher implements Serializable {
         }
     }
 
-    public String readBody(int documentNumber) {
+    // Returns the body of a specific document
+    public String getBody(int documentNumber) {
         // (?s) treats whole body as one line
         Pattern pattern = Pattern.compile("(?s)<BODY>(.+?)</BODY>");
         Matcher matcher = pattern.matcher(getDocumentString(documentNumber));
@@ -63,6 +66,7 @@ public class DocumentFetcher implements Serializable {
         }
     }
 
+    // Gets entire document, including all tags
     public String getDocumentString(int documentNumber) {
         Scanner reader = xmlReader(documentNumber);
         String doc = "";
@@ -74,6 +78,7 @@ public class DocumentFetcher implements Serializable {
         return doc;
     }
 
+    // Get a specific line of a specific document
     public String getDocumentLine(int documentNumber, int lineNumber) {
         Scanner reader = xmlReader(documentNumber);
         for (int i = 0; i < lineNumber - 1; i++) {
@@ -85,6 +90,7 @@ public class DocumentFetcher implements Serializable {
         return line;
     }
 
+    // The Scanner used to read the documents
     private Scanner xmlReader(int documentNumber) {
         Scanner inputStream = null;
         String path = Shared.XML_FILE_PATH + "doc_" + documentNumber + ".xml";

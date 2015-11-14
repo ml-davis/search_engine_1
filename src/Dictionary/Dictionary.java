@@ -7,10 +7,11 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Dictionary implements Serializable {
-    private int totalWordCount;
 
+    private int totalWordCount;
     private HashMap<String, TermInfo> dictionary;
 
+    // Constructor
     public Dictionary() {
         this.totalWordCount = 0;
         this.dictionary = new HashMap<>();
@@ -55,26 +56,19 @@ public class Dictionary implements Serializable {
         int[] index = new int[words.length];
         TermInfo[] info = new TermInfo[words.length];
         for (int i = 0; i < words.length; i++) {
-            System.out.print(words[i] + " ");
             index[i] = 0;
             info[i] = dictionary.get(words[i]);
-            System.out.println(info[i].getDocumentsFound().size());
         }
-        System.out.println();
 
         while (true) {
             int[] docId = new int[words.length];
             for (int j = 0; j < words.length; j++) {
-                System.out.print(info[j].getDocument(index[j]).getDocumentNumber() + " ");
                 docId[j] = info[j].getDocument(index[j]).getDocumentNumber();
                 if (terminator >= 0 && docId[j] > terminator)
                     return temp.getWord(query);
             }
-            System.out.println();
             if (allSame(docId)) {
                 temp.submitWord(query, docId[0]);
-//                solutions.add(docId[0]);
-                System.out.println("Added " + docId[0]);
                 for (int j = 0; j < words.length; j++) {
                     if (index[j] < info[j].getDocumentsFound().size() - 1)
                         index[j]++;
@@ -91,14 +85,10 @@ public class Dictionary implements Serializable {
                     if (index[highestIndex] >= info[highestIndex].getDocumentsFound().size() - 1) {
                         terminator = highest;
                     }
-
                     index[incrementIndex]++;
                 }
             }
-
-            System.out.println();
         }
-
     }
 
     // Used by my wildcard query. Returns words in dictionary that begin with argument.
@@ -188,7 +178,6 @@ public class Dictionary implements Serializable {
                 }
             }
         }
-
         return scores;
     }
 

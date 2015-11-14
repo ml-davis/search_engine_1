@@ -17,6 +17,8 @@ public class Parser implements Serializable {
         parser.quickParse();
     }
 
+    // This is used if it is not necessary to split the dictionary into blocks. Quickly parses documents and stores
+    // them into quickly_parsed_dictionary
     public void quickParse() {
         long startTime = System.nanoTime();
 
@@ -46,6 +48,7 @@ public class Parser implements Serializable {
         System.out.println("Creating and writing all blocks to disk took " + timeToComplete + " seconds.");
     }
 
+    // This is a slower merge. Used if the memory of dictionary exceeds the memory of the machine.
     public void mergeParse() {
         long startTime = System.nanoTime();
 
@@ -85,7 +88,9 @@ public class Parser implements Serializable {
         System.out.println("Creating and writing all blocks to disk took " + timeToComplete + " seconds.");
     }
 
-    public static ArrayList<String> porterStem(List<String> tokens1){
+    // This is used if having a small dictionary is of utmost importance.
+    // Provides lossy compression by only saving the stem of words. Ex: operation, operative, etc => operat
+    public ArrayList<String> porterStem(List<String> tokens1){
         PorterStemmer stemmer = new PorterStemmer();
         ArrayList<String> stemmedTokens = new ArrayList<>();
         for (String token : tokens1){
@@ -99,6 +104,7 @@ public class Parser implements Serializable {
         return stemmedTokens;
     }
 
+    // Writes the dictionary to disk
     public void saveDictionary(Dictionary dictionary, String fileName) {
         try {
             String path = Shared.DICTIONARY_PATH + fileName;

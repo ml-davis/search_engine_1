@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.Stack;
 
+// This is used in the merge sort. Used if the dictionary is larger than memory.
 public class Merger {
-
 
     public void merge() {
         String path = Shared.DICTIONARY_PATH;
@@ -63,7 +63,7 @@ public class Merger {
         System.out.println("Write to disk successful");
     }
 
-    public static Dictionary mergeDictionaries(Dictionary d1, Dictionary d2) {
+    private Dictionary mergeDictionaries(Dictionary d1, Dictionary d2) {
         Dictionary dictionary = new Dictionary();
         Set d2KeySet = d2.getKeySet();
         for (Object key : d2KeySet) {

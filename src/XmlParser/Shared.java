@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
+// Provides methods that are used between several
 public class Shared {
 
     // Project Options
@@ -15,6 +16,7 @@ public class Shared {
 
     // paths
     public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
+    public static final String SGM_FILE_PATH = "/home/matthew/SearchEngine/Reuters/sgm_files/";
     public static final String XML_FILE_PATH = "/home/matthew/SearchEngine/Reuters/xml_files/";
 
     // constants
@@ -23,6 +25,7 @@ public class Shared {
     public static final double NUMBER_OF_DOCUMENTS = 21578;
     public static final double AVERAGE_DOCUMENT_LENGTH = NUMBER_OF_WORDS/NUMBER_OF_DOCUMENTS;
 
+    // Returns the dictionary dependent on the specified options above
     public static Dictionary getDictionary() {
         Dictionary d = null;
         long startTime = System.nanoTime();
@@ -40,7 +43,6 @@ public class Shared {
             ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(path));
             d = (Dictionary) inputStream.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("I am in the catch block.");
             e.printStackTrace();
         }
         long endTime = System.nanoTime();
@@ -49,6 +51,7 @@ public class Shared {
         return d;
     }
 
+    // Translates query to an array of search tokens. These tokens are filtered by regex and do not contain stop words.
     public static String[] getSearchTokens(String query) {
         query = filterString(query);
         String[] words = query.split(" ");
@@ -57,6 +60,7 @@ public class Shared {
         return words;
     }
 
+    // Used in getSearchTokens
     private static String filterString(String text) {
         text = text.replaceAll("\\n", " ");
         text = text.replaceAll("[^a-zA-Z']", " ");
@@ -66,6 +70,7 @@ public class Shared {
         return text;
     }
 
+    // Used by getSearchTokens
     private static String[] removeStopWords(String[] words) {
         String[] stopWords = {"I", "a", "about", "an", "are", "as", "at", "be", "by", "for", "from", "how", "in", "is",
             "it", "of", "on", "or", "that", "the", "this", "to", "was", "what", "when", "where", "who", "will", "with",
@@ -89,5 +94,4 @@ public class Shared {
 
         return results;
     }
-
 }

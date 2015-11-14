@@ -1,15 +1,15 @@
 package SgmToXml;
 
+import XmlParser.Shared;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
+// Parses all of the .sgm files into XML files and store them into Shared.XML_FILE_PATH
 public class SgmParser {
     public void parseFiles() {
-        String sgmDirectory = "/home/matthew/SearchEngine/Reuters/sgm_files";
-        String xmlDirectory = "/home/matthew/SearchEngine/Reuters/xml_files";
-
-        File sgmFolder = new File(sgmDirectory);
+        File sgmFolder = new File(Shared.SGM_FILE_PATH);
         File[] sgmFiles = sgmFolder.listFiles();
 
         if (sgmFiles == null) {
@@ -20,11 +20,11 @@ public class SgmParser {
 
             for (File sgmFile : sgmFiles) {
 
-                String sgmFileName = sgmDirectory + "/" + sgmFile.getName();
+                String sgmFileName = Shared.SGM_FILE_PATH + sgmFile.getName();
                 Scanner reader = reader(new File(sgmFileName));
                 System.out.println("Parsing " + sgmFileName);
 
-                String xmlFileName = xmlDirectory + "/doc_" + xmlCount++ + ".xml";
+                String xmlFileName = Shared.XML_FILE_PATH + "doc_" + xmlCount++ + ".xml";
                 PrintWriter outputStream = writer(xmlFileName);
 
                 while (reader.hasNextLine()) {
@@ -32,7 +32,7 @@ public class SgmParser {
                     outputStream.println(line);
                     if (line.equals("</REUTERS>") && reader.hasNextLine()) {
                         outputStream.close();
-                        xmlFileName = xmlDirectory + "/doc_" + xmlCount++ + ".xml";
+                        xmlFileName = Shared.XML_FILE_PATH + "doc_" + xmlCount++ + ".xml";
                         outputStream = writer(xmlFileName);
                     }
                 }

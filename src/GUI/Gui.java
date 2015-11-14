@@ -120,8 +120,8 @@ public class Gui extends Application implements Serializable {
             try {
                 int input = Integer.parseInt(viewDocumentField.getText());
                 DocumentFetcher fetcher = new DocumentFetcher();
-                documentOutput.setText(fetcher.readTitle(input) + "\n");
-                documentOutput.appendText(fetcher.readBody(input));
+                documentOutput.setText(fetcher.getTitle(input) + "\n");
+                documentOutput.appendText(fetcher.getBody(input));
             } catch (Exception e1) {
                 documentOutput.setText("Please enter the document number as an integer value");
             }
