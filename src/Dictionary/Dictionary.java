@@ -53,6 +53,12 @@ public class Dictionary implements Serializable {
         int terminator = -1;
         String[] words = Shared.getSearchTokens(query);
 
+        for (String word : words) {
+            if (!dictionary.containsKey(word)) {
+                return "Word not found";
+            }
+        }
+
         if (words.length == 0) {
             return "Word not found";
         } else if (words.length == 1) {
@@ -73,7 +79,6 @@ public class Dictionary implements Serializable {
                         return temp.getWord(query);
                 }
                 if (allSame(docId)) {
-                    System.out.println("Submitting document: " + docId[0]);
                     temp.submitWord(query, docId[0]);
                     for (int j = 0; j < words.length; j++) {
                         if (index[j] < info[j].getDocumentsFound().size() - 1)
@@ -85,7 +90,6 @@ public class Dictionary implements Serializable {
                     return temp.getWord(query);
                 } else {
                     int highest = getHighest(docId);
-                    int highestIndex = getHighestIndex(docId, highest);
                     ArrayList<Integer> incrementIndexes = getIncrementIndexes(docId, highest);
 
                     for (int incrementIndex : incrementIndexes) {
@@ -129,6 +133,17 @@ public class Dictionary implements Serializable {
         return output;
     }
 
+    public String weightedQuery2(String query) {
+        String[] words = Shared.getSearchTokens(query);
+        ArrayList<DocumentScore> scores = bm25_2(words);
+        int count = 1;
+        String result = "";
+        for (DocumentScore score : scores) {
+            result += count++ + ":\t" + score + "\n";
+        }
+        return result;
+    }
+
     // Get top 25 results using the BM25 equation for a weighted score
     public String weightedQuery(String query) {
         String[] words = Shared.getSearchTokens(query);
@@ -165,7 +180,7 @@ public class Dictionary implements Serializable {
 
                 for (Document doc : document) {
 
-                    // variables dependent on the documents of the given word
+                    // variables dependent on the documents of the given document
                     int documentNumber = doc.getDocumentNumber();
                     double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
                     double TFtd = (double) doc.getDocumentFrequency();
@@ -188,6 +203,58 @@ public class Dictionary implements Serializable {
                 }
             }
         }
+        return scores;
+    }
+
+    private ArrayList<DocumentScore> bm25_2(String[] words) {
+        // this will be the results returned the caller of the method
+        ArrayList<DocumentScore> scores = new ArrayList<>();
+
+        // constants used in equation
+        double N = Shared.NUMBER_OF_DOCUMENTS;
+        double Lave = Shared.AVERAGE_DOCUMENT_LENGTH;
+        double b = 0.5;
+        double k1 = 2;
+
+        for (int i = 0; i < words.length; i++) {
+            // if word is not contained in dictionary, we do not need to add alter the scores
+            if (dictionary.containsKey(words[i])) {
+                TermInfo termInfo = dictionary.get(words[i]);                 // has statistics of word in dictionary
+                DocumentFetcher fetcher = new DocumentFetcher();              // used to read documents in collection
+                ArrayList<Document> documents = termInfo.getDocumentsFound(); // list documents of given word
+
+                // variables dependent only on the word
+                double DFt = (double) termInfo.getDocumentFrequency();
+//                double TFtq = (double) termInfo.getTermFrequency();   can be added to 'long' query calculation
+
+                // iterate over all the documents for each word
+                for (Document doc : documents) {
+
+                    // variables dependent on the documents of the given document
+                    int docId = doc.getDocumentNumber();
+                    double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
+                    double TFtd = (double) doc.getDocumentFrequency();
+
+                    // calculate score
+                    double newScore = calculateBM25(N, Lave, b, k1, DFt, Ld, TFtd);
+
+                    if (i > 0) { // do not need to check for duplicates if we are looking at our first word
+                        for (int j = 0; j < scores.size(); j++) {
+                            if (docId == scores.get(j).getDocumentId()) {
+                                // Found a duplicate
+                                newScore += scores.get(j).getScore();
+                                System.out.println("Removing " + docId);
+                                scores.remove(j);
+                            }
+                        }
+                    }
+
+                    System.out.println("Adding " + docId);
+                    scores.add(new DocumentScore(docId, newScore));
+                }
+            }
+        }
+        Collections.sort(scores);
         return scores;
     }
 

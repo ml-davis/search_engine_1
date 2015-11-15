@@ -108,7 +108,7 @@ public class Gui extends Application implements Serializable {
             if (Shared.STEMMED) {
                 term = stemSearchTerm(term);
             }
-            output += dictionary.weightedQuery(term);
+            output += dictionary.weightedQuery2(term);
             searchResults.setText(output);
         });
         grid.add(weightedSearchButton, 2, 3);

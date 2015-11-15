@@ -71,7 +71,7 @@ public class Shared {
     private static String[] removeStopWords(String[] words) {
         String[] stopWords = {"I", "a", "about", "an", "are", "as", "at", "be", "by", "for", "from", "how", "in", "is",
             "it", "of", "on", "or", "that", "the", "this", "to", "was", "what", "when", "where", "who", "will", "with",
-            "the"};
+            "the", "and"};
         ArrayList<String> filteredWords = new ArrayList<>();
         for (String word : words) {
             boolean hasWord = false;
