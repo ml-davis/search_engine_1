@@ -13,9 +13,9 @@ public class Merger {
     public void merge() {
         String path = Shared.DICTIONARY_PATH;
         if (Shared.STEMMED) {
-            path += "stemmed/";
+            path += "stemmed/blocks/";
         } else {
-            path += "ordinary/";
+            path += "ordinary/blocks/";
         }
 
         File directory = new File(path);
@@ -81,7 +81,7 @@ public class Merger {
 
     public void saveDictionary(Dictionary dictionary, String path) {
         try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path + "/merged"));
+            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(path + "dictionary"));
             outputStream.writeObject(dictionary);
             outputStream.close();
             System.out.println("Successfully saved your dictionary: \n" + path);

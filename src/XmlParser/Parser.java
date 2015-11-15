@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parser implements Serializable {
-    private static final int blockSize = 5500;
-    private static final int amountOfFiles = 21578;
+
+    private final int amountOfFiles = 21578;
 
     public static void main(String[] args) {
         Parser parser = new Parser();
@@ -37,10 +37,10 @@ public class Parser implements Serializable {
         }
         System.out.println("\nWriting dictionary to disk...\n");
         if (Shared.STEMMED) {
-            String path = "/stemmed/quick_parsed_dictionary";
+            String path = "/stemmed/dictionary";
             saveDictionary(dictionary, path);
         } else {
-            String path = "/ordinary/quick_parsed_dictionary";
+            String path = "/ordinary/dictionary";
             saveDictionary(dictionary, path);
         }
 
@@ -50,6 +50,8 @@ public class Parser implements Serializable {
 
     // This is a slower merge. Used if the memory of dictionary exceeds the memory of the machine.
     public void mergeParse() {
+        int blockSize = 5500;
+
         long startTime = System.nanoTime();
 
         Dictionary dictionary = new Dictionary();
@@ -73,10 +75,10 @@ public class Parser implements Serializable {
             }
             System.out.println("\nWriting block " + blockCount + " to disk...\n");
             if (Shared.STEMMED) {
-                String path = "/stemmed/block_" + blockCount++;
+                String path = "/stemmed/blocks/block_" + blockCount++;
                 saveDictionary(dictionary, path);
             } else {
-                String path = "/ordinary/block_" + blockCount++;
+                String path = "/ordinary/blocks/block_" + blockCount++;
                 saveDictionary(dictionary, path);
             }
         }

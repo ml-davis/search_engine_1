@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Dictionary implements Serializable {
-
     private int totalWordCount;
     private HashMap<String, TermInfo> dictionary;
 
@@ -36,7 +35,7 @@ public class Dictionary implements Serializable {
         }
     }
 
-    // Gives the ability to easily browse the contents of dictionary. Returns the words in specified range.
+    // Gives the ability browse the contents of dictionary. Returns the words in specified range.
     public void showDictionary(int start, int end) {
         ArrayList<String> sortedDictionary = new ArrayList<>(dictionary.keySet());
         System.out.println("Sorting dictionary...");
@@ -75,6 +74,8 @@ public class Dictionary implements Serializable {
                     else
                         return temp.getWord(query);
                 }
+            } else if (allDocumentsExhausted(index, info)) {
+                return temp.getWord(query);
             } else {
                 int highest = getHighest(docId);
                 int highestIndex = getHighestIndex(docId, highest);
@@ -233,6 +234,16 @@ public class Dictionary implements Serializable {
             }
         }
         return index;
+    }
+
+    // Used by the intersection to determine if all document lists are exhausted
+    private boolean allDocumentsExhausted(int[] index, TermInfo[] info) {
+        for (int i = 0; i < index.length; i++) {
+            if (index[i]+1 < info[i].getDocumentsFound().size()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // Getters

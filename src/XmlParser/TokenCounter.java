@@ -1,6 +1,6 @@
 package XmlParser;
 
-// Quick and simple class made to compute a constant needed in bm25 algorithm
+// Quick and simple class made to compute a constant needed for bm25 algorithm
 public class TokenCounter {
     public static void main(String[] args) {
         DocumentFetcher fetcher = new DocumentFetcher();
