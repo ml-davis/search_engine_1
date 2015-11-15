@@ -10,11 +10,7 @@ public class DocumentScore implements Comparable<DocumentScore> {
     }
 
     public String toString() {
-        if (documentId >= 1000) {
-            return "Document " + documentId + "\t\tScore: " + score;
-        } else {
-            return "Document " + documentId + "\t\t\tScore: " + score;
-        }
+        return String.format("%-20s%-7s%7.3f", "doc_" + documentId, "Score:", score);
     }
 
     @Override

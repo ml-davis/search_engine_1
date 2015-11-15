@@ -45,6 +45,7 @@ public class Gui extends Application implements Serializable {
         TextArea searchResults = new TextArea();
         searchResults.setPrefRowCount(35);
         searchResults.setEditable(false);
+        searchResults.setStyle("-fx-font-family: monospace");
         ScrollPane searchScrollPane = new ScrollPane();
         searchScrollPane.setContent(searchResults);
         grid.add(searchResults, 0, 4, 3, 1);

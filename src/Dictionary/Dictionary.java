@@ -52,41 +52,48 @@ public class Dictionary implements Serializable {
 
         int terminator = -1;
         String[] words = Shared.getSearchTokens(query);
-        int[] index = new int[words.length];
-        TermInfo[] info = new TermInfo[words.length];
-        for (int i = 0; i < words.length; i++) {
-            index[i] = 0;
-            info[i] = dictionary.get(words[i]);
-        }
 
-        while (true) {
-            int[] docId = new int[words.length];
-            for (int j = 0; j < words.length; j++) {
-                docId[j] = info[j].getDocument(index[j]).getDocumentNumber();
-                if (terminator >= 0 && docId[j] > terminator)
-                    return temp.getWord(query);
+        if (words.length == 0) {
+            return "Word not found";
+        } else if (words.length == 1) {
+            return getWord(words[0]);
+        } else {
+            int[] index = new int[words.length];
+            TermInfo[] info = new TermInfo[words.length];
+            for (int i = 0; i < words.length; i++) {
+                index[i] = 0;
+                info[i] = dictionary.get(words[i]);
             }
-            if (allSame(docId)) {
-                temp.submitWord(query, docId[0]);
+
+            while (true) {
+                int[] docId = new int[words.length];
                 for (int j = 0; j < words.length; j++) {
-                    if (index[j] < info[j].getDocumentsFound().size() - 1)
-                        index[j]++;
-                    else
+                    docId[j] = info[j].getDocument(index[j]).getDocumentNumber();
+                    if (terminator >= 0 && docId[j] > terminator)
                         return temp.getWord(query);
                 }
-            } else if (allDocumentsExhausted(index, info)) {
-                return temp.getWord(query);
-            } else {
-                int highest = getHighest(docId);
-                int highestIndex = getHighestIndex(docId, highest);
-                ArrayList<Integer> incrementIndexes = getIncrementIndexes(docId, highest);
-
-                for (int incrementIndex : incrementIndexes) {
-                    // if one of the lists reaches end of the list
-                    if (index[highestIndex] >= info[highestIndex].getDocumentsFound().size() - 1) {
-                        terminator = highest;
+                if (allSame(docId)) {
+                    temp.submitWord(query, docId[0]);
+                    for (int j = 0; j < words.length; j++) {
+                        if (index[j] < info[j].getDocumentsFound().size() - 1)
+                            index[j]++;
+                        else
+                            return temp.getWord(query);
                     }
-                    index[incrementIndex]++;
+                } else if (allDocumentsExhausted(index, info)) {
+                    return temp.getWord(query);
+                } else {
+                    int highest = getHighest(docId);
+                    int highestIndex = getHighestIndex(docId, highest);
+                    ArrayList<Integer> incrementIndexes = getIncrementIndexes(docId, highest);
+
+                    for (int incrementIndex : incrementIndexes) {
+                        // if one of the lists reaches end of the list
+                        if (index[highestIndex] >= info[highestIndex].getDocumentsFound().size() - 1) {
+                            terminator = highest;
+                        }
+                        index[incrementIndex]++;
+                    }
                 }
             }
         }
@@ -94,6 +101,7 @@ public class Dictionary implements Serializable {
 
     // Used by my wildcard query. Returns words in dictionary that begin with argument.
     public String getWordsBeginningWith(String beginsWith) {
+        beginsWith = beginsWith.toLowerCase();
         ArrayList<String> sortedDictionary = new ArrayList<>(dictionary.keySet());
         Collections.sort(sortedDictionary);
 
@@ -124,11 +132,10 @@ public class Dictionary implements Serializable {
         String[] words = Shared.getSearchTokens(query);
         TreeSet<DocumentScore> scores = bm25(words);
         Iterator<DocumentScore> iterator = scores.iterator();
-        int count = 0;
+        int count = 1;
         String result = "";
-        while (iterator.hasNext() && count < 25) {
-            result += iterator.next() + "\n";
-            count++;
+        while (iterator.hasNext() && count <= 100) {
+            result += count++ + ":\t" + iterator.next() + "\n";
         }
 
         return result;

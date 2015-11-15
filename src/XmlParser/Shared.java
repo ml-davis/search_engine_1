@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class Shared {
 
     // Project Options
-    public static final boolean STEMMED = true;
-    public static final boolean QUICK_PARSE = false;
+    public static final boolean STEMMED = false;
+    public static final boolean QUICK_PARSE = true;
 
     // paths
     public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
