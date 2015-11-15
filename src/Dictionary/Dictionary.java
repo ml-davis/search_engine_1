@@ -73,6 +73,7 @@ public class Dictionary implements Serializable {
                         return temp.getWord(query);
                 }
                 if (allSame(docId)) {
+                    System.out.println("Submitting document: " + docId[0]);
                     temp.submitWord(query, docId[0]);
                     for (int j = 0; j < words.length; j++) {
                         if (index[j] < info[j].getDocumentsFound().size() - 1)
@@ -89,8 +90,9 @@ public class Dictionary implements Serializable {
 
                     for (int incrementIndex : incrementIndexes) {
                         // if one of the lists reaches end of the list
-                        if (index[highestIndex] >= info[highestIndex].getDocumentsFound().size() - 1) {
-                            terminator = highest;
+                        int highestReached = highestReached(index, info, docId);
+                        if (highestReached > 0) {
+                            terminator = highestReached;
                         }
                         index[incrementIndex]++;
                     }
@@ -251,6 +253,15 @@ public class Dictionary implements Serializable {
             }
         }
         return true;
+    }
+
+    private int highestReached(int[] index, TermInfo[] info, int[] docId) {
+        for (int i = 0; i < index.length; i++) {
+            if (index[i] >= info[i].getDocumentsFound().size() - 1) {
+                return docId[i];
+            }
+        }
+        return -1;
     }
 
     // Getters

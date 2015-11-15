@@ -31,7 +31,7 @@ public class TermInfo implements Serializable {
 
     public String toString() {
         if (documentsFound.size() > 0) {
-            String toString = " was found " + termFrequency + " times in " + documentsFound.size() + " documents\n";
+            String toString = " was found " + termFrequency + " times in " + documentsFound.size() + " documents\n\n";
             for (Document document : documentsFound) {
                 toString += document;
             }

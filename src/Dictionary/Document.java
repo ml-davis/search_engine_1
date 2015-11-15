@@ -12,7 +12,9 @@ public class Document implements Serializable {
     }
 
     public String toString() {
-        return "\tdoc_" + documentNumber + ": " + documentFrequency + " times\n";
+        String documentNumber = "doc_" + this.documentNumber + ":";
+        String amount = documentFrequency + " times";
+        return String.format("  %-12s%-10s%n", documentNumber, amount);
     }
 
     public void addInstance() {
