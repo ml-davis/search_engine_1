@@ -14,7 +14,11 @@ public class Parser implements Serializable {
 
     public static void main(String[] args) {
         Parser parser = new Parser();
-        parser.quickParse();
+        if (Shared.QUICK_PARSE) {
+            parser.quickParse();
+        } else {
+            parser.mergeParse();
+        }
     }
 
     // This is used if it is not necessary to split the dictionary into blocks. Quickly parses documents and stores
@@ -83,6 +87,7 @@ public class Parser implements Serializable {
             }
         }
 
+        System.out.println("Beginning merge");
         Merger merger = new Merger();
         merger.merge();
 

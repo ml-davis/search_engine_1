@@ -11,8 +11,8 @@ import java.util.ArrayList;
 public class Shared {
 
     // Project Options
-    public static final boolean STEMMED = false;
-    public static final boolean QUICK_PARSE = true;
+    public static final boolean STEMMED = true;
+    public static final boolean QUICK_PARSE = false;
 
     // paths
     public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
@@ -21,7 +21,8 @@ public class Shared {
 
     // constants
     // this is total amount of words that appear in all documents (not total unique)
-    public static final double NUMBER_OF_WORDS = 2757710;
+//    public static final double NUMBER_OF_WORDS = 2757710;
+    public static final double NUMBER_OF_WORDS = 3400215;
     public static final double NUMBER_OF_DOCUMENTS = 21578;
     public static final double AVERAGE_DOCUMENT_LENGTH = NUMBER_OF_WORDS/NUMBER_OF_DOCUMENTS;
 

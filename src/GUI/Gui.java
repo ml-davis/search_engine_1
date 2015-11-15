@@ -104,6 +104,9 @@ public class Gui extends Application implements Serializable {
         weightedSearchButton.setOnAction(e -> {
             String term = weightedSearchField.getText();
             String output = "Weighted search results for: " + term + "\n\n";
+            if (Shared.STEMMED) {
+                term = stemSearchTerm(term);
+            }
             output += dictionary.weightedQuery(term);
             searchResults.setText(output);
         });

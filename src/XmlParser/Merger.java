@@ -13,12 +13,12 @@ public class Merger {
     public void merge() {
         String path = Shared.DICTIONARY_PATH;
         if (Shared.STEMMED) {
-            path += "stemmed/blocks/";
+            path += "stemmed/";
         } else {
-            path += "ordinary/blocks/";
+            path += "ordinary/";
         }
 
-        File directory = new File(path);
+        File directory = new File(path + "blocks/");
         File[] dictionaryFiles = directory.listFiles();
         ArrayList<Dictionary> dictionaries = new ArrayList<>();
         Stack<Dictionary> stack = new Stack();
