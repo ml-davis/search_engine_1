@@ -133,80 +133,23 @@ public class Dictionary implements Serializable {
         return output;
     }
 
-    public String weightedQuery2(String query) {
-        String[] words = Shared.getSearchTokens(query);
-        ArrayList<DocumentScore> scores = bm25_2(words);
-        int count = 1;
-        String result = "";
-        for (DocumentScore score : scores) {
-            result += count++ + ":\t" + score + "\n";
-        }
-        return result;
-    }
-
     // Get top 25 results using the BM25 equation for a weighted score
     public String weightedQuery(String query) {
         String[] words = Shared.getSearchTokens(query);
-        TreeSet<DocumentScore> scores = bm25(words);
-        Iterator<DocumentScore> iterator = scores.iterator();
+        ArrayList<DocumentScore> scores = bm25(words);
         int count = 1;
         String result = "";
-        while (iterator.hasNext() && count <= 100) {
-            result += count++ + ":\t" + iterator.next() + "\n";
+        for (DocumentScore score : scores) {
+            if (count > 100) {
+                break;
+            }
+            result += String.format("%-6s%-50s%n", count++ + ":", score);
         }
-
         return result;
     }
 
-    // Returns a set of documents sorted by their bm25 score
-    private TreeSet<DocumentScore> bm25(String[] words) {
-        TreeSet<DocumentScore> scores = new TreeSet<>();
-
-        // constants
-        double N = Shared.NUMBER_OF_DOCUMENTS;
-        double Lave = Shared.AVERAGE_DOCUMENT_LENGTH;
-        double b = 0.5;
-        double k1 = 2;
-
-        for (String word: words) {
-            if (dictionary.containsKey(word)) {
-                TermInfo termInfo = dictionary.get(word);
-                DocumentFetcher fetcher = new DocumentFetcher();
-                ArrayList<Document> document = termInfo.getDocumentsFound();
-
-                // variables dependent only on the word
-                double DFt = (double) termInfo.getDocumentFrequency();
-//                double TFtq = (double) termInfo.getTermFrequency();   can be added to 'long' query calculation
-
-                for (Document doc : document) {
-
-                    // variables dependent on the documents of the given document
-                    int documentNumber = doc.getDocumentNumber();
-                    double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
-                    double TFtd = (double) doc.getDocumentFrequency();
-
-                    // calculate score
-                    double currentScore = calculateBM25(N, Lave, b, k1, DFt, Ld, TFtd);
-
-                    // add scores to set
-                    Iterator<DocumentScore> iterator = scores.iterator();
-                    while (iterator.hasNext()) { // check if document is already in set
-                        DocumentScore score = iterator.next();
-                        // if document already in set, add oldScore to currentScore, remove old entry
-                        if (score.getDocumentId() == documentNumber) {
-                            currentScore += score.getScore();
-                            iterator.remove();
-                        }
-                    }
-                    // add score to set
-                    scores.add(new DocumentScore(documentNumber, currentScore));
-                }
-            }
-        }
-        return scores;
-    }
-
-    private ArrayList<DocumentScore> bm25_2(String[] words) {
+    // Returns a list of documents sorted by their bm25 score
+    private ArrayList<DocumentScore> bm25(String[] words) {
         // this will be the results returned the caller of the method
         ArrayList<DocumentScore> scores = new ArrayList<>();
 
@@ -225,7 +168,7 @@ public class Dictionary implements Serializable {
 
                 // variables dependent only on the word
                 double DFt = (double) termInfo.getDocumentFrequency();
-//                double TFtq = (double) termInfo.getTermFrequency();   can be added to 'long' query calculation
+//                double TFtq = (double) termInfo.getTermFrequency();   can be added to 'long' query calculation (11.33)
 
                 // iterate over all the documents for each word
                 for (Document doc : documents) {
@@ -242,14 +185,13 @@ public class Dictionary implements Serializable {
                         for (int j = 0; j < scores.size(); j++) {
                             if (docId == scores.get(j).getDocumentId()) {
                                 // Found a duplicate
-                                newScore += scores.get(j).getScore();
-                                System.out.println("Removing " + docId);
-                                scores.remove(j);
+                                newScore += scores.get(j).getScore();  // update score
+                                scores.remove(j); // remove old value
                             }
                         }
                     }
 
-                    System.out.println("Adding " + docId);
+                    // add new score
                     scores.add(new DocumentScore(docId, newScore));
                 }
             }
@@ -299,17 +241,6 @@ public class Dictionary implements Serializable {
         }
 
         return values;
-    }
-
-    // Used by the intersection algorithm to determine which document list doesn't need to be incremented
-    private int getHighestIndex(int[] docId, int highest) {
-        int index = -1;
-        for (int i = 0; i < docId.length; i++) {
-            if (docId[i] == highest) {
-                index = i;
-            }
-        }
-        return index;
     }
 
     // Used by the intersection to determine if all document lists are exhausted
