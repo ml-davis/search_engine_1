@@ -10,7 +10,6 @@ public class DictionaryTester {
         getResults("Democrats' welfare and healthcare reform policies");
         getResults("Drug company bankruptcies");
         getResults("George Bush");
-
     }
 
     public static void getResults(String query) {

@@ -11,6 +11,11 @@ public class Document implements Serializable {
         this.documentFrequency = 1;
     }
 
+    public Document(int documentNumber, int documentFrequency) {
+        this.documentNumber = documentNumber;
+        this.documentFrequency = documentFrequency;
+    }
+
     public String toString() {
         String documentNumber = "doc_" + this.documentNumber + ":";
         String amount = documentFrequency + " times";

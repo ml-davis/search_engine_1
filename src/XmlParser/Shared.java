@@ -15,9 +15,9 @@ public class Shared {
     public static final boolean QUICK_PARSE = true;
 
     // paths
-    public static final String DICTIONARY_PATH = "/home/matthew/SearchEngine/Dictionaries/";
-    public static final String SGM_FILE_PATH = "/home/matthew/SearchEngine/Reuters/sgm_files/";
-    public static final String XML_FILE_PATH = "/home/matthew/SearchEngine/Reuters/xml_files/";
+    public static final String DICTIONARY_PATH = "/home/matthew/IdeaProjects/SearchEngine/Dictionaries/";
+    public static final String SGM_FILE_PATH = "/home/matthew/IdeaProjects/SearchEngine/Reuters/sgm_files/";
+    public static final String XML_FILE_PATH = "/home/matthew/IdeaProjects/SearchEngine/Reuters/xml_files/";
 
     // constants
     // this is total amount of words that appear in all documents (not total unique)
