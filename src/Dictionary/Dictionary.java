@@ -20,9 +20,9 @@ public class Dictionary implements Serializable {
     public void submitWord(String word, int documentNumber) {
         if (!dictionary.containsKey(word)) {
             totalWordCount++;
-            dictionary.put(word, new TermInfo(documentNumber));
+            dictionary.put(word, new TermInfo(documentNumber)); // add new word
         } else {
-            dictionary.get(word).addTermOccurrence(documentNumber);
+            dictionary.get(word).addTermOccurrence(documentNumber); // update word info
         }
     }
 
@@ -85,9 +85,9 @@ public class Dictionary implements Serializable {
         ArrayList<Document> merged = new ArrayList<>();
         while (index_1 < d1.size() && index_2 < d2.size()) {
             int docID_1 = d1.get(index_1).getDocumentNumber();
-            int termFrequency_1 = d1.get(index_1).getDocumentFrequency();
+            int termFrequency_1 = d1.get(index_1).getTermFrequency();
             int docID_2 = d2.get(index_2).getDocumentNumber();
-            int termFrequency_2 = d2.get(index_2).getDocumentFrequency();
+            int termFrequency_2 = d2.get(index_2).getTermFrequency();
 
             if (docID_1 == docID_2) {
                 merged.add(new Document(docID_1, lowest(termFrequency_1, termFrequency_2)));
@@ -138,7 +138,7 @@ public class Dictionary implements Serializable {
         int count = 1;
         String result = "";
         for (DocumentScore score : scores) {
-            if (count > 100) {
+            if (count > 20) {
                 break;
             }
             result += String.format("%-6s%-50s%n", count++ + ":", score);
@@ -174,7 +174,7 @@ public class Dictionary implements Serializable {
                     // variables dependent on the documents of the given document
                     int docId = doc.getDocumentNumber();
                     double Ld = (double) fetcher.getDocumentSize(doc.getDocumentNumber());
-                    double TFtd = (double) doc.getDocumentFrequency();
+                    double TFtd = (double) doc.getTermFrequency();
 
                     // calculate score
                     double newScore = calculateBM25(N, Lave, b, k1, DFt, Ld, TFtd);

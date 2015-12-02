@@ -71,7 +71,7 @@ public class Merger {
             for (int j = 0; j < info.getDocumentsFound().size(); j++) {
                 Document document = info.getDocument(j);
                 int docId = document.getDocumentNumber();
-                for (int k = 0; k < document.getDocumentFrequency(); k++) {
+                for (int k = 0; k < document.getTermFrequency(); k++) {
                     dictionary.submitWord((String)key, docId);
                 }
             }
