@@ -65,7 +65,7 @@ public class Gui extends Application implements Serializable {
         grid.add(intersectionSearchField, 1, 1);
         Button intersectionSearchButton = new Button("Search");
         intersectionSearchButton.setOnAction(e -> {
-            String searchItem = intersectionSearchField.getText();
+            String searchItem = intersectionSearchField.getText().toLowerCase();
             if (searchItem.equals("")) {
                 searchResults.setText("Please enter search term");
             } else {
@@ -85,7 +85,7 @@ public class Gui extends Application implements Serializable {
         grid.add(wildcardField, 1, 2);
         Button wildcardButton = new Button("Search");
         wildcardButton.setOnAction(e -> {
-            String term = wildcardField.getText();
+            String term = wildcardField.getText().toLowerCase();
             String output;
             if (term.equals("")) {
                 output = "Please enter the beginning of the word that you are interested in";
@@ -103,7 +103,7 @@ public class Gui extends Application implements Serializable {
         grid.add(weightedSearchField, 1, 3);
         Button weightedSearchButton = new Button("Search");
         weightedSearchButton.setOnAction(e -> {
-            String term = weightedSearchField.getText();
+            String term = weightedSearchField.getText().toLowerCase();
             String output = "Weighted search results for: " + term + "\n\n";
             if (Shared.STEMMED) {
                 term = stemSearchTerm(term);
